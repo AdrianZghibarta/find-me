@@ -10,6 +10,15 @@ namespace Findme
 		public BoxView bottomLine = new BoxView();
 		public UnderlinedEntry entry = new UnderlinedEntry();
 
+		public String ImageName {
+			get { 
+				return ImageName;
+			}
+			set { 
+				image.Source = new FileImageSource () { File = ImageName };
+			}
+		}
+
 		public InputView ()
 		{
 			this.setLayout ();

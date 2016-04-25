@@ -44,6 +44,97 @@ namespace Findme
 				})
 			);
 
+
+
+			emailEntry = new InputView ();
+			emailEntry.entry.TextColor = Color.White;
+			emailEntry.entry.PlaceholderColor = Color.White;
+			emailEntry.entry.Keyboard = Keyboard.Email;
+			emailEntry.bottomLine.BackgroundColor = Color.White;
+			emailEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			emailEntry.entry.Placeholder = "Email";
+
+			firstNameEntry = new InputView ();
+			firstNameEntry.entry.TextColor = Color.White;
+			firstNameEntry.entry.PlaceholderColor = Color.White;
+			firstNameEntry.bottomLine.BackgroundColor = Color.White;
+			firstNameEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			firstNameEntry.entry.Placeholder = "First Name";
+
+			lastNameEntry = new InputView ();
+			lastNameEntry.entry.TextColor = Color.White;
+			lastNameEntry.entry.PlaceholderColor = Color.White;
+			lastNameEntry.bottomLine.BackgroundColor = Color.White;
+			lastNameEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			lastNameEntry.entry.Placeholder = "Last Name";
+
+			passwordEntry = new InputView ();
+			passwordEntry.entry.TextColor = Color.White;
+			passwordEntry.entry.PlaceholderColor = Color.White;
+			passwordEntry.entry.IsPassword = true;
+			passwordEntry.bottomLine.BackgroundColor = Color.White;
+			passwordEntry.image.Source = new FileImageSource () { File = "lock_white.png"}; 
+			passwordEntry.entry.Placeholder = "Password";
+
+			countryEntry = new InputView ();
+			countryEntry.entry.TextColor = Color.White;
+			countryEntry.entry.PlaceholderColor = Color.White;
+			countryEntry.bottomLine.BackgroundColor = Color.White;
+			countryEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			countryEntry.entry.Placeholder = "Country";
+
+
+			cityEntry = new InputView ();
+			cityEntry.entry.TextColor = Color.White;
+			cityEntry.entry.PlaceholderColor = Color.White;
+			cityEntry.bottomLine.BackgroundColor = Color.White;
+			cityEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			cityEntry.entry.Placeholder = "City";
+
+			addressEntry = new InputView ();
+			addressEntry.entry.TextColor = Color.White;
+			addressEntry.entry.PlaceholderColor = Color.White;
+			addressEntry.bottomLine.BackgroundColor = Color.White;
+			addressEntry.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			addressEntry.entry.Placeholder = "Address";
+
+			phoneNumber = new InputView ();
+			phoneNumber.entry.TextColor = Color.White;
+			phoneNumber.entry.PlaceholderColor = Color.White;
+			phoneNumber.entry.Keyboard = Keyboard.Telephone;
+			phoneNumber.bottomLine.BackgroundColor = Color.White;
+			phoneNumber.image.Source = new FileImageSource () { File = "user_white.png"}; 
+			phoneNumber.entry.Placeholder = "Phone";
+
+			var scrollView = new ScrollView () {
+				Content = new StackLayout() {
+
+					Padding = new Thickness(50, 140, 50, 200),
+					Children = {
+						this.emailEntry,
+						this.firstNameEntry,
+						this.lastNameEntry,
+						this.passwordEntry,
+						this.countryEntry,
+						this.cityEntry,
+						this.addressEntry,
+						this.phoneNumber
+					}
+				}
+			};
+
+			this.Children.Add (
+				scrollView,
+				Constraint.Constant(0),
+				Constraint.Constant(20),
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Width;
+				}),
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Height;
+				})
+			);
+
 			var circleView = new RoundedBoxView () {
 				Color = ColorMap.OrangeColor,
 				OutlineColor = ColorMap.OrangeColor,
