@@ -6,133 +6,90 @@ namespace Findme
 {
 	public class LogInPage : ContentPage
 	{
+		#region -> UI Elements
+
+		// - Containers for login and registration
+		LogInView loginContainer = new LogInView ();
+		RegistrationView registerContainer = new RegistrationView ();
+
+		// - Other proprietes
+		uint animationSpeed = 300;
+
+		#endregion
+
+		#region -> Base class and initialisation methods
 
 		// - Constructor
 		public LogInPage ()
 		{
 			this.setMainLayout ();
 			this.BackgroundColor = Color.White;
+			this.setButtonsHandlers ();
 		}
 
-		// - Test request
-		protected override void OnAppearing ()
-		{
-			base.OnAppearing ();
+		private void setButtonsHandlers() {
+			
+			loginContainer.showRegistrationButton.Clicked += (object sender, EventArgs e) => {
 
-			NetworkingManager.sharedInstance.googleRequest ().ContinueWith( (task) => {
-				ConsoleOutput.PrintLine(task.Result);
-			});
+				Rectangle newLoginContainerBounds = new Rectangle(0, -Content.Bounds.Height, Content.Width, Content.Height);
+				Rectangle newRegisterContainerBounds = new Rectangle(0, 0, Content.Width, Content.Height);
+
+				loginContainer.LayoutTo(newLoginContainerBounds, animationSpeed, Easing.Linear);
+				registerContainer.LayoutTo(newRegisterContainerBounds, animationSpeed, Easing.Linear);
+			};
+
+			registerContainer.showLogInButton.Clicked += (object sender, EventArgs e) => {
+
+				Rectangle newLoginContainerBounds = new Rectangle(0, 0, Content.Width, Content.Height);
+				Rectangle newRegisterContainerBounds = new Rectangle(0, Content.Bounds.Height, Content.Width, Content.Height);
+
+				loginContainer.LayoutTo(newLoginContainerBounds, animationSpeed, Easing.Linear);
+				registerContainer.LayoutTo(newRegisterContainerBounds, animationSpeed, Easing.Linear);
+			};
 		}
 
-		// - Cunstructing the main page
+		#endregion
+
+		#region -> Setup for main layout
+
 		private void setMainLayout() {
+			// - The page conteiner
 
-			var backgroundImageBottom = new Image () {
-				Source = new FileImageSource () { File = "city_drawing3x.jpg" },
-				Aspect = Aspect.AspectFill,
-				IsOpaque = true,
-				Opacity = 0.8
-			};
+			var rootLayout = new RelativeLayout ();
 
-			var backgroundImageUpper = new Image () {
-				Source = new FileImageSource () { File = "city_drawing3x.jpg" },
-				Aspect = Aspect.AspectFill,
-				IsOpaque = true,
-				Opacity = 0.8
-			};
+			loginContainer.IsClippedToBounds = true;
+			registerContainer.IsClippedToBounds = true;
 
-			var circleView = new RoundedBoxView () {
-				Color = Color.White,
-				OutlineColor = Color.Black,
-				OutlineWidth = 1,
-				CornerRadius = 2000,
-				WidthRequest = 100,
-				HeightRequest = 100
-			};
-
-			var relativeLayout = new RelativeLayout () {
-				HeightRequest = 100,
-			};
-
-			relativeLayout.Children.Add (
-				backgroundImageUpper,
+			rootLayout.Children.Add (
+				loginContainer,
 				Constraint.Constant(0),
 				Constraint.Constant(0),
-				Constraint.RelativeToParent ( (parent) => {
+				Constraint.RelativeToParent( (parent) => {
 					return parent.Width;
-				} ),
-				Constraint.RelativeToParent ( (parent) => {
-					return parent.Height * 0.5;
-				} )
+				}),
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Height;
+				})
 			);
-
-			relativeLayout.Children.Add (
-				backgroundImageBottom,
+				
+			rootLayout.Children.Add (
+				registerContainer,
 				Constraint.Constant(0),
-				Constraint.RelativeToParent ( (parent) => {
-					return parent.Height - parent.Height * 0.5;	
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Height;
 				}),
-				Constraint.RelativeToParent ( (parent) => {
+				Constraint.RelativeToParent( (parent) => {
 					return parent.Width;
-				} ),
-				Constraint.RelativeToParent ( (parent) => {
-					return parent.Height * 0.5;
-				} )
-			);
-
-			double circleProportions = 0.7;
-			relativeLayout.Children.Add (
-				circleView,
-				Constraint.RelativeToParent( (parent) => {
-					return 0 - (parent.Height * circleProportions - parent.Width) / 2;
 				}),
 				Constraint.RelativeToParent( (parent) => {
-					return (parent.Height - parent.Height * circleProportions) / 2;
-				}),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Height * circleProportions;
-				}),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Height * circleProportions;
+					return parent.Height;
 				})
 			);
 
-			var usernameTextEntry = new Entry() {
-				TextColor = Color.Black,
-				PlaceholderColor = Color.Gray,
-				Placeholder = "Email"
-			};
-
-			var passwordTextEntry = new Entry () {
-				TextColor = Color.Black,
-				PlaceholderColor = Color.Gray,
-				Placeholder = "Password",
-				IsPassword = true
-			};
-
-			relativeLayout.Children.Add (
-				usernameTextEntry,
-				Constraint.Constant(40),
-				Constraint.Constant(300),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Width - 40 * 2;
-				}),
-				Constraint.Constant(40)
-			);
-
-			relativeLayout.Children.Add (
-				passwordTextEntry,
-				Constraint.Constant(40),
-				Constraint.Constant(350),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Width - 40 * 2;
-				}),
-				Constraint.Constant(40)
-			);
-
-			this.Content = relativeLayout;
+			this.Content = rootLayout;
 		}
 
+		#endregion
 	}
 }
 

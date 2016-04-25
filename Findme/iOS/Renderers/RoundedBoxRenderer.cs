@@ -1,10 +1,10 @@
 ﻿using System;
+using Findme;
+using Findme.iOS;
 using Xamarin.Forms.Platform.iOS;
 using UIKit;
 using CoreGraphics;
 using Xamarin.Forms;
-using Findme;
-using Findme.iOS;
 
 [assembly: ExportRenderer(typeof(RoundedBoxView), typeof(RoundedBoxRenderer))]
 
