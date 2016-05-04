@@ -124,6 +124,24 @@
     <BundleResource Include="Resources\lock_white%403x.png" />
     <BundleResource Include="Resources\user_white%402x.png" />
     <BundleResource Include="Resources\user_white%403x.png" />
+    <BundleResource Include="Resources\address%402x.png" />
+    <BundleResource Include="Resources\address%403x.png" />
+    <BundleResource Include="Resources\city%402x.png" />
+    <BundleResource Include="Resources\city%403x.png" />
+    <BundleResource Include="Resources\country%402x.png" />
+    <BundleResource Include="Resources\country%403x.png" />
+    <BundleResource Include="Resources\inbox%402x.png" />
+    <BundleResource Include="Resources\inbox%403x.png" />
+    <BundleResource Include="Resources\phone%402x.png" />
+    <BundleResource Include="Resources\phone%403x.png" />
+    <BundleResource Include="Resources\many_user%402x.png" />
+    <BundleResource Include="Resources\many_user%403x.png" />
+    <BundleResource Include="Resources\circle%402x.png" />
+    <BundleResource Include="Resources\circle%403x.png" />
+    <BundleResource Include="Resources\google%402x.png" />
+    <BundleResource Include="Resources\google%403x.png" />
+    <BundleResource Include="Resources\facebook%402x.png" />
+    <BundleResource Include="Resources\facebook%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Renderers\" />

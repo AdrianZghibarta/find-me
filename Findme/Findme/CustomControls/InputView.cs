@@ -26,6 +26,8 @@ namespace Findme
 
 		private void setLayout() {
 
+			BackgroundColor = ColorMap.BlackTransparentBackground;
+
 			// - Dimensions
 			double imagePadding = 5;
 			double imageWidth = 15;

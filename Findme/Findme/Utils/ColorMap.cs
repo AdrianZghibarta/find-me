@@ -10,6 +10,10 @@ namespace Findme
 		/// </summary>
 		public static Color OrangeColor = Color.FromHex("B54831");
 
+		/// <summary>
+		/// The black transparent background.
+		/// </summary>
+		public static Color BlackTransparentBackground = Color.FromRgba(0.3, 0.3, 0.3, 0.1);
 
 
 		public ColorMap () {}

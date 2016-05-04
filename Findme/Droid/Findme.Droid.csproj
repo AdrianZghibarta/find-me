@@ -108,6 +108,15 @@
     <AndroidResource Include="Resources\drawable\lock_white.png" />
     <AndroidResource Include="Resources\drawable-hdpi\user_white.png" />
     <AndroidResource Include="Resources\drawable\user_white.png" />
+    <AndroidResource Include="Resources\drawable\address.png" />
+    <AndroidResource Include="Resources\drawable\city.png" />
+    <AndroidResource Include="Resources\drawable\country.png" />
+    <AndroidResource Include="Resources\drawable\inbox.png" />
+    <AndroidResource Include="Resources\drawable\phone.png" />
+    <AndroidResource Include="Resources\drawable\many_user.png" />
+    <AndroidResource Include="Resources\drawable\circle.png" />
+    <AndroidResource Include="Resources\drawable\facebook.png" />
+    <AndroidResource Include="Resources\drawable\google.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.1.0.6529\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.1.0.6529\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
