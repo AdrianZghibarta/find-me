@@ -11,8 +11,8 @@ namespace Findme
 		InputView usernameEntry;
 		InputView loginpasswordEntry;
 		Button loginButton;
-		Button facebookLoginButton;
-		Button googleLoginButton;
+		public Button facebookLoginButton;
+		public Button googleLoginButton;
 		public Button showRegistrationButton;
 
 		#endregion

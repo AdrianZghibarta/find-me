@@ -18,6 +18,8 @@ namespace Findme.Droid
 	
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{
+		public static MainActivity sharedInstance;
+
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
@@ -25,6 +27,8 @@ namespace Findme.Droid
 			global::Xamarin.Forms.Forms.Init (this, bundle);
 
 			LoadApplication (new App ());
+
+			MainActivity.sharedInstance = this;
 		}
 	}
 }

@@ -13,29 +13,13 @@ namespace Findme
 {
 	public class NetworkingManager
 	{
-		private static NetworkingManager singletonInstance;
 		protected HttpClient client;
-
-		/// <summary>
-		/// Gets the shared instance.
-		/// </summary>
-		/// <value>The shared instance.</value>
-		public static NetworkingManager sharedInstance
-		{
-			get 
-			{
-				if (singletonInstance == null)
-				{
-					singletonInstance = new NetworkingManager ();
-				}
-				return singletonInstance;
-			}
-		}
-
+		protected HttpClient authClient;
 
 		public NetworkingManager ()
 		{
 			client = new HttpClient ();
+			authClient = new HttpClient ();
 		}
 
 		public async Task<String> googleRequest() {

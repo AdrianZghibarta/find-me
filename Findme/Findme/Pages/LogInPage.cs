@@ -1,10 +1,10 @@
 ﻿using System;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace Findme
 {
-	public class LogInPage : ContentPage
+	public class LogInPage : AuthPage
 	{
 		#region -> UI Elements
 
@@ -25,6 +25,7 @@ namespace Findme
 			this.setMainLayout ();
 			this.BackgroundColor = Color.White;
 			this.setButtonsHandlers ();
+			this.setSocialTokenHandlers ();
 		}
 
 		private void setButtonsHandlers() {
@@ -46,6 +47,27 @@ namespace Findme
 				loginContainer.LayoutTo(newLoginContainerBounds, animationSpeed, Easing.Linear);
 				registerContainer.LayoutTo(newRegisterContainerBounds, animationSpeed, Easing.Linear);
 			};
+
+			loginContainer.facebookLoginButton.Clicked += (object sender, EventArgs e) => {
+
+				this.showFacebookAuth();
+			};
+		}
+
+		private void setSocialTokenHandlers() {
+
+			this.didGetFacebookAccessToken = ((accessToken) => {
+
+				SocialAuthManager.sharedInstance.getFacebookSocialUserWithAuthToken(accessToken).ContinueWith( task => {
+					SocialUser user = (SocialUser)task.Result;
+
+				});
+			});
+
+			this.didGetGoogleAccesToken = ((accessToken) => {
+
+				ConsoleOutput.PrintLine(accessToken);
+			});
 		}
 
 		#endregion

@@ -16,5 +16,13 @@ namespace Findme
 
 		public NetworkingUrls () { }
 	}
+
+	public class NetworkingConstants
+	{
+
+		public static readonly String FACEBOOK_APP_ID = "1520390861548141";
+		public static readonly String FACEBOOK_REDIRECT_URL = "http://yourstuff.herokuapp.com";
+		public static readonly String FACEBOOK_AUTH_URL = "https://m.facebook.com/dialog/oauth/";
+	}
 }
 
