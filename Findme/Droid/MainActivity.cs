@@ -14,7 +14,7 @@ namespace Findme.Droid
 		Icon = "@drawable/icon", 
 		MainLauncher = true, 
 		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
-		WindowSoftInputMode = SoftInput.AdjustUnspecified)]
+		WindowSoftInputMode = SoftInput.AdjustPan)]
 	
 	public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsApplicationActivity
 	{

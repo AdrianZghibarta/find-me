@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Findme
 {
-	public class LogInPage : AuthPage
+	public class AuthentificationPage : AuthPage
 	{
 		#region -> UI Elements
 
@@ -20,7 +20,7 @@ namespace Findme
 		#region -> Base class and initialisation methods
 
 		// - Constructor
-		public LogInPage ()
+		public AuthentificationPage ()
 		{
 			this.setMainLayout ();
 			this.BackgroundColor = Color.White;
@@ -47,19 +47,15 @@ namespace Findme
 				loginContainer.LayoutTo(newLoginContainerBounds, animationSpeed, Easing.Linear);
 				registerContainer.LayoutTo(newRegisterContainerBounds, animationSpeed, Easing.Linear);
 			};
-
-			loginContainer.facebookLoginButton.Clicked += (object sender, EventArgs e) => {
-
-				this.showFacebookAuth();
-			};
 		}
 
 		private void setSocialTokenHandlers() {
 
 			this.didGetFacebookAccessToken = ((accessToken) => {
 
-				SocialAuthManager.sharedInstance.getFacebookSocialUserWithAuthToken(accessToken).ContinueWith( task => {
-					SocialUser user = (SocialUser)task.Result;
+				AuthentificationManager.SharedInstance.AuthentificateUserWithFacebookToken(accessToken).ContinueWith( task => {
+
+					FindMeResponse response = task.Result;
 
 				});
 			});
@@ -108,6 +104,8 @@ namespace Findme
 				})
 			);
 
+			this.loginContainer.authPage = this;
+			this.registerContainer.authPage = this;
 			this.Content = rootLayout;
 		}
 

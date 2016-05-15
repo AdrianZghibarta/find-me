@@ -8,7 +8,9 @@ namespace Findme
 		/// <summary>
 		/// The color of the blue.
 		/// </summary>
-		public static Color OrangeColor = Color.FromHex("B54831");
+		public static Color DarkBlueColor = Color.FromHex("2C3E50");
+
+		public static Color GreenColor = Color.FromHex("18BC9C");
 
 		/// <summary>
 		/// The black transparent background.

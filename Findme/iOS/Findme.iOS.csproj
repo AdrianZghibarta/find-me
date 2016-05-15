@@ -120,6 +120,8 @@
     <Compile Include="Renderers\RoundedBoxRenderer.cs" />
     <Compile Include="Renderers\UnderlinedEntryRenderer.cs" />
     <Compile Include="Renderers\AuthPageRenderer.cs" />
+    <Compile Include="DependencyServicesiOS\DeviceUserStorageiOS.cs" />
+    <Compile Include="Renderers\ImageCircleRenderer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
@@ -147,8 +149,12 @@
     <BundleResource Include="Resources\google%403x.png" />
     <BundleResource Include="Resources\facebook%402x.png" />
     <BundleResource Include="Resources\facebook%403x.png" />
+    <BundleResource Include="Resources\photo%402x.png" />
+    <BundleResource Include="Resources\photo%403x.png" />
+    <BundleResource Include="Resources\photoPlaceholder.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Renderers\" />
+    <Folder Include="DependencyServicesiOS\" />
   </ItemGroup>
 </Project>

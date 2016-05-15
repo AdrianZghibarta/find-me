@@ -2230,14 +2230,20 @@ namespace Findme.Droid
 			// aapt resource value: 0x7f0200aa
 			public const int mr_ic_play_light = 2130837674;
 			
-			// aapt resource value: 0x7f0200ad
-			public const int notification_template_icon_bg = 2130837677;
+			// aapt resource value: 0x7f0200af
+			public const int notification_template_icon_bg = 2130837679;
 			
 			// aapt resource value: 0x7f0200ab
 			public const int phone = 2130837675;
 			
 			// aapt resource value: 0x7f0200ac
-			public const int user_white = 2130837676;
+			public const int photo = 2130837676;
+			
+			// aapt resource value: 0x7f0200ad
+			public const int photoPlaceholder = 2130837677;
+			
+			// aapt resource value: 0x7f0200ae
+			public const int user_white = 2130837678;
 			
 			static Drawable()
 			{

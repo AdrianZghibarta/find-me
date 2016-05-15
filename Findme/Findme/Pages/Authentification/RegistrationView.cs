@@ -3,6 +3,8 @@ using Xamarin.Forms;
 
 namespace Findme
 {
+	public delegate void RegistrationHandler();
+
 	public class RegistrationView: RelativeLayout
 	{
 		#region -> UI Elements
@@ -16,10 +18,69 @@ namespace Findme
 		InputView cityEntry;
 		InputView addressEntry;
 		InputView phoneNumber;
-		Button registrationButton;
-		Button facebookRegistrationButton;
-		Button googleRegistrationButton;
+		Button selectImageButton;
+		public Button registrationButton;
 		public Button showLogInButton;
+
+		#endregion
+
+		#region -> Proprietes
+
+		public AuthentificationPage authPage;
+		public RegistrationHandler didPerformedRegistration;
+
+		#endregion
+
+		#region -> Functionalities
+
+		public bool isDataValid() {
+
+			Entry[] entriesToValidate = new Entry[] { 
+				emailEntry.entry, 
+				firstNameEntry.entry, 
+				lastNameEntry.entry, 
+				passwordEntry.entry, 
+				countryEntry.entry,
+				cityEntry.entry,
+				addressEntry.entry,
+				phoneNumber.entry
+			};
+			return Validator.ValidateEntires (entriesToValidate);
+		}
+
+		private void setButtonHandlers() {
+			
+			this.registrationButton.Clicked += (object sender, EventArgs e) => {
+
+				// - Validate the data from the page
+				if (!this.isDataValid()) {
+					this.authPage.DisplayAlert("Validation Error", "Please complete all fields!", "OK");
+					return;
+				}
+
+				// - If it's all ok then perform the requst
+				AuthentificationManager.SharedInstance.RegisterUser(
+					email: this.emailEntry.entry.Text,
+					password: this.passwordEntry.entry.Text,
+					firstName: this.firstNameEntry.entry.Text,
+					lastName: this.lastNameEntry.entry.Text,
+					image: null
+				).ContinueWith( task => {
+
+					FindMeResponse response = (FindMeResponse)task.Result;
+					if (null != response.ErrorInfo) {
+						Device.BeginInvokeOnMainThread( () => {
+							authPage.DisplayAlert("Error", response.ErrorInfo, "Ok");
+						});
+					}
+					else {
+						Device.BeginInvokeOnMainThread( () => {
+							authPage.DisplayAlert("Succes", "You are registrated", "Ok");
+						});
+					}
+				});
+			};
+		}
 
 		#endregion
 
@@ -28,7 +89,7 @@ namespace Findme
 		public RegistrationView ()
 		{
 			var backgroundImage = new Image () {
-				Source = new FileImageSource () { File = "blurredBackground.jpg" },
+				BackgroundColor = ColorMap.GreenColor,
 				Aspect = Aspect.AspectFill
 			};
 
@@ -46,6 +107,45 @@ namespace Findme
 
 			double textEntriesPadding = 40;
 			double textEntriesHeight = 40;
+			double imageDim = 100;
+
+			var imageContainer = new RelativeLayout () { 
+				HeightRequest = imageDim
+			};
+
+			var avatarImage = new ImageCircle () {
+				Source = new FileImageSource () {
+					File = "photoPlaceholder.png"
+				},
+				BorderColor = Color.White,
+				BorderWidth = 2,
+				Aspect = Aspect.AspectFill
+			};
+
+			this.selectImageButton = new Button () { 
+				BackgroundColor = Color.Transparent,
+				Text = ""
+			};
+
+			imageContainer.Children.Add (
+				avatarImage,
+				Constraint.RelativeToParent( (parent) => {
+					return (parent.Width - imageDim) / 2;
+				}),
+				Constraint.Constant(0),
+				Constraint.Constant(imageDim),
+				Constraint.Constant(imageDim)
+			);
+
+			imageContainer.Children.Add (
+				selectImageButton,
+				Constraint.RelativeToParent( (parent) => {
+					return (parent.Width - imageDim) / 2;
+				}),
+				Constraint.Constant(0),
+				Constraint.Constant(imageDim),
+				Constraint.Constant(imageDim)
+			);
 
 			HeaderView generalInfoHeader = new HeaderView() {
 				Title = "General Info",
@@ -148,16 +248,17 @@ namespace Findme
 				Spacing = 5,
 				VerticalOptions = LayoutOptions.Start,
 				Children = {
+					imageContainer,
 					generalInfoHeader,
 					this.emailEntry,
 					this.firstNameEntry,
 					this.lastNameEntry,
 					this.passwordEntry,
-					addressHeader,
-					this.countryEntry,
-					this.cityEntry,
-					this.addressEntry,
-					this.phoneNumber,
+					//addressHeader,
+					//this.countryEntry,
+					//this.cityEntry,
+					//this.addressEntry,
+					//this.phoneNumber,
 					bottomSeparatorView,
 					this.registrationButton
 				}
@@ -180,8 +281,8 @@ namespace Findme
 			);
 
 			var circleView = new RoundedBoxView () {
-				Color = ColorMap.OrangeColor,
-				OutlineColor = ColorMap.OrangeColor,
+				Color = ColorMap.DarkBlueColor,
+				OutlineColor = ColorMap.DarkBlueColor,
 				OutlineWidth = 1,
 				CornerRadius = 2000,
 				WidthRequest = 100,
@@ -222,6 +323,8 @@ namespace Findme
 				Constraint.Constant (showLoginButtonWidth),
 				Constraint.Constant (showLoginButtonHeight)
 			);
+
+			this.setButtonHandlers ();
 		}
 
 		#endregion

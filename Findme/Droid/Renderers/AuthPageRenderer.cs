@@ -46,12 +46,15 @@ namespace Findme.Droid
 					auth.AllowCancel = true;
 
 					// - If authorization succeeds or is canceled, .Completed will be fired.
-//					auth.Completed += (sender, eventArgs) =>
-//					{
-//
-//						// - And call the handler for acces token
-//						authPage.didGetFacebookAccessToken(eventArgs.Account.Properties["access_token"]);
-//					};
+					auth.Completed += (sender, eventArgs) =>
+					{
+						if (!eventArgs.IsAuthenticated) {;
+							return;
+						}
+
+						// - And call the handler for acces token
+						authPage.didGetFacebookAccessToken(eventArgs.Account.Properties["access_token"]);
+					};
 
 					var intent = auth.GetUI (MainActivity.sharedInstance);
 					MainActivity.sharedInstance.StartActivity (intent);

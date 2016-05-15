@@ -3,6 +3,9 @@ using Xamarin.Forms;
 
 namespace Findme
 {
+	public delegate void ManualLoginHandler();
+	public delegate void FacebookLoginHandler();
+
 	public class LogInView: RelativeLayout
 	{
 		#region -> UIElements
@@ -10,10 +13,67 @@ namespace Findme
 		// - Login Elements
 		InputView usernameEntry;
 		InputView loginpasswordEntry;
-		Button loginButton;
+		public Button loginButton;
 		public Button facebookLoginButton;
 		public Button googleLoginButton;
 		public Button showRegistrationButton;
+
+		#endregion
+
+		#region -> Proprietes
+
+		public AuthentificationPage authPage;
+		public ManualLoginHandler didPerformedManualLogin;
+		public FacebookLoginHandler didPerformFacebookLogin;
+
+		#endregion
+
+		#region -> Functionalities
+
+		public void setButtonHandlers() {
+
+			this.facebookLoginButton.Clicked += (object sender, EventArgs e) => {
+
+				this.authPage.showFacebookAuth();
+			};
+
+			this.loginButton.Clicked += (object sender, EventArgs e) => {
+
+				// - Validate data
+				if (!this.isDataValid()) {
+					this.authPage.DisplayAlert("Validation Error", "Please complete all fields!", "OK");
+					return;
+				}
+
+				// - Perform the request
+				AuthentificationManager.SharedInstance.AuthentificateUser(
+					email: this.usernameEntry.entry.Text,
+					password: this.loginpasswordEntry.entry.Text
+				).ContinueWith ( task => {
+
+					FindMeResponse response = (FindMeResponse)task.Result;
+					if (null != response.ErrorInfo) {
+						Device.BeginInvokeOnMainThread( () => {
+							authPage.DisplayAlert("Error", response.ErrorInfo, "Ok");
+						});
+					}
+					else {
+						Device.BeginInvokeOnMainThread( () => {
+							authPage.DisplayAlert("Succes", "You are logged in", "Ok");
+						});
+					}
+				});
+			};
+		}
+
+		public bool isDataValid() {
+
+			Entry[] entriesToValidate = new Entry[] { 
+				usernameEntry.entry,
+				loginpasswordEntry.entry
+			};
+			return Validator.ValidateEntires (entriesToValidate);
+		}
 
 		#endregion
 
@@ -24,7 +84,7 @@ namespace Findme
 			// - The background image
 
 			var backgroundImage = new Image () {
-				Source = new FileImageSource () { File = "blurredBackground.jpg" },
+				BackgroundColor = ColorMap.GreenColor,
 				Aspect = Aspect.AspectFill
 			};
 
@@ -146,8 +206,8 @@ namespace Findme
 			// - The circle bottom view
 
 			var circleView = new RoundedBoxView () {
-				Color = ColorMap.OrangeColor,
-				OutlineColor = ColorMap.OrangeColor,
+				Color = ColorMap.DarkBlueColor,
+				OutlineColor = ColorMap.DarkBlueColor,
 				OutlineWidth = 1,
 				CornerRadius = 2000,
 				WidthRequest = 100,
@@ -197,6 +257,8 @@ namespace Findme
 				Constraint.Constant (showRegistrationButtonWidth),
 				Constraint.Constant (showRegistrationButtonHeight)
 			);
+
+			this.setButtonHandlers ();
 		}
 
 		#endregion

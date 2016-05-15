@@ -9,7 +9,7 @@ namespace Findme
 		public App ()
 		{
 			// The root page of your application
-			MainPage = new LogInPage();
+			MainPage = new IntroPage();
 		}
 
 		protected override void OnStart ()
