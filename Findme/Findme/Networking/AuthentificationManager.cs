@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using System.Collections.Generic;
 using System.ServiceModel;
 using System.Net;
+using System.IO;
 
 namespace Findme
 {
@@ -58,11 +59,12 @@ namespace Findme
 				var result = await client.PostAsync(NetworkingUrls.FACEBOOK_LOGIN_URL, parameters);
 				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
 
-				User user = JsonConvert.DeserializeObject<User>(findMeResponse.Result);
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
 				if (null == user) {
 					findMeResponse.ErrorInfo = "No Object Found";
 				}
 				else {
+					findMeResponse.Result = user;
 					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}
@@ -97,11 +99,12 @@ namespace Findme
 				var result = await client.PostAsync(NetworkingUrls.LOGIN_URL, parameters);
 				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
 
-				User user = JsonConvert.DeserializeObject<User>(findMeResponse.Result);
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
 				if (null == user) {
 					findMeResponse.ErrorInfo = "No Object Found";
 				}
 				else {
+					findMeResponse.Result = user;
 					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}
@@ -134,11 +137,97 @@ namespace Findme
 				var result = await client.PostAsync(NetworkingUrls.REFRESH_TOKEN_URL, parameters);
 				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
 
-				User user = JsonConvert.DeserializeObject<User>(findMeResponse.Result);
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
 				if (null == user) {
 					findMeResponse.ErrorInfo = "No Object Found";
 				}
 				else {
+					findMeResponse.Result = user;
+					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
+				}
+			}
+			catch (Exception ex)
+			{
+				ConsoleOutput.PrintLine ("Error message : " + ex.Message);
+				findMeResponse.ErrorInfo = ex.Message;
+			}
+
+			return findMeResponse;
+		}
+
+		/// <summary>
+		/// Gets the user.
+		/// </summary>
+		/// <returns>The user.</returns>
+		public async Task<FindMeResponse> GetUser() {
+
+			var findMeResponse = new FindMeResponse ();
+
+			try
+			{
+				var token = UserStorage.GetAccessToken();
+
+				var result = await client.GetAsync(NetworkingUrls.GET_USER + "?token=" + token);
+				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
+
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
+				if (null == user) {
+					findMeResponse.ErrorInfo = "No Object Found";
+				}
+				else {
+					findMeResponse.Result = user;
+					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
+				}
+			}
+			catch (Exception ex)
+			{
+				ConsoleOutput.PrintLine ("Error message : " + ex.Message);
+				findMeResponse.ErrorInfo = ex.Message;
+			}
+
+			return findMeResponse;
+		}
+
+		/// <summary>
+		/// Edits the user.
+		/// </summary>
+		/// <returns>The user.</returns>
+		/// <param name="firstName">First name.</param>
+		/// <param name="lastName">Last name.</param>
+		/// <param name="password">Password.</param>
+		/// <param name="imageBase64">Image base64.</param>
+		public async Task<FindMeResponse> EditUser(String firstName, String lastName, String password, String imageBase64)
+		{
+			var findMeResponse = new FindMeResponse ();
+
+			try
+			{
+				var keyValues = new List<KeyValuePair<string, string>>();
+				keyValues.Add(new KeyValuePair<string, string>("token", UserStorage.GetAccessToken()));
+				keyValues.Add(new KeyValuePair<string, string>("firstname", firstName));
+				keyValues.Add(new KeyValuePair<string, string>("lastname", lastName));
+				if (password != null) {
+					if (password != "") {
+						keyValues.Add(new KeyValuePair<string, string>("password", password));
+					}
+				}
+				if (imageBase64 != null) {
+					if (imageBase64 != "") {
+						keyValues.Add(new KeyValuePair<string, string>("image", imageBase64));
+					}
+				}
+
+				var parameters = new FormUrlEncodedContent(keyValues);
+
+				var result = await client.PostAsync(NetworkingUrls.EDIT_USER, parameters);
+				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
+
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
+				if (null == user) {
+					findMeResponse.ErrorInfo = "No Object Found";
+				}
+				else {
+					findMeResponse.Result = user;
 					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}
@@ -160,7 +249,7 @@ namespace Findme
 		/// <param name="firstName">First name.</param>
 		/// <param name="lastName">Last name.</param>
 		/// <param name="image">Image.</param>
-		public async Task<FindMeResponse> RegisterUser(String email, String password, String firstName, String lastName, Image image)
+		public async Task<FindMeResponse> RegisterUser(String email, String password, String firstName, String lastName, String imageBase64)
 		{
 			var findMeResponse = new FindMeResponse ();
 
@@ -172,18 +261,19 @@ namespace Findme
 						new KeyValuePair<string, string>("password", password),
 						new KeyValuePair<string, string>("firstname", firstName),
 						new KeyValuePair<string, string>("lastname", lastName),
-						new KeyValuePair<string, string>("image", "")
+						new KeyValuePair<string, string>("image", imageBase64)
 					}
 				);
 
 				var result = await client.PostAsync(NetworkingUrls.REGISTER_URL, parameters);
 				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "user");
 
-				User user = JsonConvert.DeserializeObject<User>(findMeResponse.Result);
+				User user = JsonConvert.DeserializeObject<User>((String)findMeResponse.Result);
 				if (null == user) {
 					findMeResponse.ErrorInfo = "No Object Found";
 				}
 				else {
+					
 					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}

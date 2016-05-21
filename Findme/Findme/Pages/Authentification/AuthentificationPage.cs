@@ -12,6 +12,8 @@ namespace Findme
 		LogInView loginContainer = new LogInView ();
 		RegistrationView registerContainer = new RegistrationView ();
 
+		public LoadingView loadingView = new LoadingView ();
+
 		// - Other proprietes
 		uint animationSpeed = 300;
 
@@ -53,10 +55,21 @@ namespace Findme
 
 			this.didGetFacebookAccessToken = ((accessToken) => {
 
+				this.loadingView.IsVisible = true;
 				AuthentificationManager.SharedInstance.AuthentificateUserWithFacebookToken(accessToken).ContinueWith( task => {
+					this.loadingView.IsVisible = false;
 
 					FindMeResponse response = task.Result;
-
+					if (null != response.ErrorInfo) {
+						Device.BeginInvokeOnMainThread( () => {
+							this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+						});
+					}
+					else {
+						Device.BeginInvokeOnMainThread( () => {
+							Navigation.PushModalAsync(new RootPage());
+						});
+					}
 				});
 			});
 
@@ -103,6 +116,22 @@ namespace Findme
 					return parent.Height;
 				})
 			);
+
+			// - Adding the loading view
+
+			rootLayout.Children.Add (
+				this.loadingView,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Width;
+				}),
+				Constraint.RelativeToParent( (parent) => {
+					return parent.Height;
+				})
+			);
+
+			this.loadingView.IsVisible = false;
 
 			this.loginContainer.authPage = this;
 			this.registerContainer.authPage = this;

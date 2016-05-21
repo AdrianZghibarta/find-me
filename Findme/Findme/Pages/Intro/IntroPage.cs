@@ -25,13 +25,13 @@ namespace Findme
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
-							DisplayAlert("Error", response.ErrorInfo, "Ok");
-							//Navigation.PushModalAsync(new AuthentificationPage());
+							ConsoleOutput.PrintLine(response.ErrorInfo);
+							Navigation.PushModalAsync(new AuthentificationPage());
 						});
 					}
-					else {
+					else {// - Success
 						Device.BeginInvokeOnMainThread( () => {
-							Navigation.PushModalAsync(new AuthentificationPage());
+							Navigation.PushModalAsync(new RootPage());
 						});
 					}
 				});

@@ -1,5 +1,9 @@
 ﻿using System;
 using Xamarin.Forms;
+using XLabs.Forms.Services;
+using XLabs.Platform.Services.Media;
+using System.Threading.Tasks;
+using XLabs.Ioc;
 
 namespace Findme
 {
@@ -10,6 +14,7 @@ namespace Findme
 		#region -> UI Elements
 
 		// - Registration Elements
+		Image avatarImage;
 		InputView emailEntry;
 		InputView firstNameEntry;
 		InputView lastNameEntry;
@@ -28,6 +33,7 @@ namespace Findme
 
 		public AuthentificationPage authPage;
 		public RegistrationHandler didPerformedRegistration;
+		private String imageInBase64;
 
 		#endregion
 
@@ -39,17 +45,13 @@ namespace Findme
 				emailEntry.entry, 
 				firstNameEntry.entry, 
 				lastNameEntry.entry, 
-				passwordEntry.entry, 
-				countryEntry.entry,
-				cityEntry.entry,
-				addressEntry.entry,
-				phoneNumber.entry
+				passwordEntry.entry
 			};
 			return Validator.ValidateEntires (entriesToValidate);
 		}
 
 		private void setButtonHandlers() {
-			
+
 			this.registrationButton.Clicked += (object sender, EventArgs e) => {
 
 				// - Validate the data from the page
@@ -58,15 +60,17 @@ namespace Findme
 					return;
 				}
 
+				this.authPage.loadingView.IsVisible = true;
 				// - If it's all ok then perform the requst
 				AuthentificationManager.SharedInstance.RegisterUser(
 					email: this.emailEntry.entry.Text,
 					password: this.passwordEntry.entry.Text,
 					firstName: this.firstNameEntry.entry.Text,
 					lastName: this.lastNameEntry.entry.Text,
-					image: null
+					imageBase64: this.imageInBase64
 				).ContinueWith( task => {
 
+					this.authPage.loadingView.IsVisible = false;
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
@@ -75,11 +79,36 @@ namespace Findme
 					}
 					else {
 						Device.BeginInvokeOnMainThread( () => {
-							authPage.DisplayAlert("Succes", "You are registrated", "Ok");
+							Navigation.PushModalAsync(new RootPage());
 						});
 					}
 				});
 			};
+
+			this.selectImageButton.Clicked += (object sender, EventArgs e) => {
+
+				this.selectPhoto().ContinueWith( task => {});
+			};
+		}
+
+		private async Task selectPhoto() {
+
+			try {
+				var mediaPicker = Resolver.Resolve<IMediaPicker> ();//DependencyService.Get<IMediaPicker> ();
+				var mediaFile = await mediaPicker.SelectPhotoAsync (new CameraMediaStorageOptions {
+					DefaultCamera = CameraDevice.Front,
+					MaxPixelDimension = 400
+				});
+
+				byte[] bytes = await StreamHelper.GetBytesArrayFromStream(mediaFile.Source);
+				this.imageInBase64 = Convert.ToBase64String(bytes);
+				this.avatarImage.Source = ImageSource.FromStream(() => mediaFile.Source);
+			} 
+			catch (System.Exception ex) {
+				Device.BeginInvokeOnMainThread (() => {
+					this.authPage.DisplayAlert("Error", ex.Message, "Ok");
+				});
+			}
 		}
 
 		#endregion
@@ -113,7 +142,7 @@ namespace Findme
 				HeightRequest = imageDim
 			};
 
-			var avatarImage = new ImageCircle () {
+			this.avatarImage = new ImageCircle () {
 				Source = new FileImageSource () {
 					File = "photoPlaceholder.png"
 				},
@@ -300,6 +329,8 @@ namespace Findme
 				Constraint.Constant(circleDiametre),
 				Constraint.Constant(circleDiametre)
 			);
+
+			circleView.IsVisible = false;
 
 			showLogInButton = new Button() {
 				BackgroundColor = Color.Transparent,

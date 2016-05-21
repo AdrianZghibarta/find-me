@@ -6,8 +6,8 @@ namespace Findme
 	{
 
 		// The base urls for the application
-		public static String BASE_URL = "http://yourstuff.herokuapp.com/";
-		public static String API_VERSION_ONE = "api/v1/";
+		public static String BASE_URL = "http://yourstuff.herokuapp.com";
+		public static String API_VERSION_ONE = "/api/v1/";
 		public static String VERSION_ONE_ROOT = NetworkingUrls.BASE_URL + API_VERSION_ONE;
 
 		// URls for authentification requests
@@ -15,6 +15,9 @@ namespace Findme
 		public static readonly String LOGIN_URL = NetworkingUrls.VERSION_ONE_ROOT + "user/login";
 		public static readonly String FACEBOOK_LOGIN_URL = NetworkingUrls.VERSION_ONE_ROOT + "user/facebook-login";
 		public static readonly String REFRESH_TOKEN_URL = NetworkingUrls.VERSION_ONE_ROOT + "user/refresh-token";
+		public static readonly String GET_USER = NetworkingUrls.VERSION_ONE_ROOT + "user/profile";
+		public static readonly String EDIT_USER = NetworkingUrls.VERSION_ONE_ROOT + "user/edit-profile";
+
 
 		public NetworkingUrls () { }
 	}

@@ -45,12 +45,14 @@ namespace Findme
 					return;
 				}
 
+				this.authPage.loadingView.IsVisible = true;
 				// - Perform the request
 				AuthentificationManager.SharedInstance.AuthentificateUser(
 					email: this.usernameEntry.entry.Text,
 					password: this.loginpasswordEntry.entry.Text
 				).ContinueWith ( task => {
 
+					this.authPage.loadingView.IsVisible = false;
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
@@ -59,7 +61,7 @@ namespace Findme
 					}
 					else {
 						Device.BeginInvokeOnMainThread( () => {
-							authPage.DisplayAlert("Succes", "You are logged in", "Ok");
+							Navigation.PushModalAsync(new RootPage());
 						});
 					}
 				});

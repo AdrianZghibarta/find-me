@@ -32,9 +32,11 @@ namespace Findme.iOS
 			base.OnElementChanged (e);
 			if (Control != null) {
 				UnderlinedEntry ue = (UnderlinedEntry)this.Element;
-				this.bottomView.BackgroundColor = ue.BottomLineColor.ToUIColor();
-				//Control.AddSubview (this.bottomView);
-				Control.BorderStyle = UITextBorderStyle.None;
+				if (ue != null) {
+					this.bottomView.BackgroundColor = ue.BottomLineColor.ToUIColor();
+					//Control.AddSubview (this.bottomView);
+					Control.BorderStyle = UITextBorderStyle.None;
+				}
 			}
 
 		}

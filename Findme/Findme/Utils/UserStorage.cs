@@ -50,8 +50,8 @@ namespace Findme
 
 		static public void DeleteAccessAndRefreshToken() {
 
-			SaveString (null, accessTokenKey);
-			SaveString (null, refreshTokenKey);
+			SaveString ("", accessTokenKey);
+			SaveString ("", refreshTokenKey);
 		}
 
 		/// <summary>

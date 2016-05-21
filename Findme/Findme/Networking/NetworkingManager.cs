@@ -12,7 +12,7 @@ using System.Net;
 namespace Findme
 {
 	public class FindMeResponse {
-		public String Result;
+		public Object Result;
 		public String ErrorInfo;
 
 		public FindMeResponse() 
