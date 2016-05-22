@@ -24,14 +24,14 @@ namespace Findme
 
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
+						ConsoleOutput.PrintLine(response.ErrorInfo);
 						Device.BeginInvokeOnMainThread( () => {
-							ConsoleOutput.PrintLine(response.ErrorInfo);
 							Navigation.PushModalAsync(new AuthentificationPage());
 						});
 					}
 					else {// - Success
 						Device.BeginInvokeOnMainThread( () => {
-							Navigation.PushModalAsync(new RootPage());
+							Xamarin.Forms.Application.Current.MainPage = new RootPage ();
 						});
 					}
 				});

@@ -15,7 +15,7 @@ namespace Findme.iOS
 		public void saveString(String stringToSave, String key) {
 			NSUserDefaults.StandardUserDefaults.SetString(stringToSave, key);
 		}
-		public String getStringForKey(String key) {
+		public string getStringForKey(String key) {
 			return NSUserDefaults.StandardUserDefaults.StringForKey(key);
 		}
 	}

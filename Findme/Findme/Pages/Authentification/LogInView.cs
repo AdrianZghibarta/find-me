@@ -45,14 +45,15 @@ namespace Findme
 					return;
 				}
 
-				this.authPage.loadingView.IsVisible = true;
+				this.authPage.loadingView.Show();
+
 				// - Perform the request
 				AuthentificationManager.SharedInstance.AuthentificateUser(
 					email: this.usernameEntry.entry.Text,
 					password: this.loginpasswordEntry.entry.Text
 				).ContinueWith ( task => {
 
-					this.authPage.loadingView.IsVisible = false;
+					this.authPage.loadingView.Hide();
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
@@ -205,33 +206,24 @@ namespace Findme
 			);
 
 
-			// - The circle bottom view
+			// - The square bottom view
 
-			var circleView = new RoundedBoxView () {
+			var squareView = new BoxView () {
 				Color = ColorMap.DarkBlueColor,
-				OutlineColor = ColorMap.DarkBlueColor,
-				OutlineWidth = 1,
-				CornerRadius = 2000,
-				WidthRequest = 100,
-				HeightRequest = 100
+				BackgroundColor = ColorMap.DarkBlueColor
 			};
 
-			double circleDiametre = 700;
-			double visibleCirclePropotion = 0.15;
+			double squareHeights = 100;
 			this.Children.Add (
-				circleView,
+				squareView,
+				Constraint.Constant(0),
 				Constraint.RelativeToParent( (parent) => {
-					return 0 - (circleDiametre - parent.Width) / 2;
+					return parent.Height - squareHeights;
 				}),
 				Constraint.RelativeToParent( (parent) => {
-					return parent.Height -circleDiametre * visibleCirclePropotion;
+					return parent.Width;
 				}),
-				Constraint.RelativeToParent( (parent) => {
-					return circleDiametre;
-				}),
-				Constraint.RelativeToParent( (parent) => {
-					return circleDiametre;
-				})
+				Constraint.Constant(squareHeights)
 			);
 
 			double showRegistrationButtonWidth = 250;
@@ -259,6 +251,9 @@ namespace Findme
 				Constraint.Constant (showRegistrationButtonWidth),
 				Constraint.Constant (showRegistrationButtonHeight)
 			);
+
+			this.usernameEntry.entry.Text = "adrian.zghibarta@gmail.com";
+			this.loginpasswordEntry.entry.Text = "qwerty";
 
 			this.setButtonHandlers ();
 		}

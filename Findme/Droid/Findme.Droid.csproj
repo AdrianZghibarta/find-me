@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidLinkMode>None</AndroidLinkMode>
     <ConsolePause>false</ConsolePause>
-    <EmbedAssembliesIntoApk>False</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -103,6 +103,7 @@
     <Compile Include="Renderers\AuthPageRenderer.cs" />
     <Compile Include="DependencyServicesAndroid\DeviceUserStorageAndroid.cs" />
     <Compile Include="Renderers\ImageCircleRenderer.cs" />
+    <Compile Include="Renderers\ListViewButtonRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -144,8 +145,19 @@
     <AndroidResource Include="Resources\drawable\menuNote.png" />
     <AndroidResource Include="Resources\drawable\menuSearch.png" />
     <AndroidResource Include="Resources\drawable\menu.png" />
+    <AndroidResource Include="Resources\drawable\calendarIcon.png" />
+    <AndroidResource Include="Resources\drawable\moneyIcon.png" />
+    <AndroidResource Include="Resources\drawable\doneIcon.png" />
+    <AndroidResource Include="Resources\drawable\filterIcon.png" />
+    <AndroidResource Include="Resources\drawable\addIcon.png" />
+    <AndroidResource Include="Resources\drawable\infoIcon.png" />
+    <AndroidResource Include="Resources\drawable\deleteIcon.png" />
+    <AndroidResource Include="Resources\drawable\hardwareIcon.png" />
+    <AndroidResource Include="Resources\drawable\info2%403x.png" />
+    <AndroidResource Include="Resources\drawable\pinIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets" Condition="Exists('..\packages\Xamarin.Android.Support.Vector.Drawable.23.3.0\build\Xamarin.Android.Support.Vector.Drawable.targets')" />
   <Import Project="..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
 </Project>

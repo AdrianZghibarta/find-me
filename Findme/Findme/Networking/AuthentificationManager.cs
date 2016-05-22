@@ -176,7 +176,6 @@ namespace Findme
 				}
 				else {
 					findMeResponse.Result = user;
-					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}
 			catch (Exception ex)
@@ -228,7 +227,6 @@ namespace Findme
 				}
 				else {
 					findMeResponse.Result = user;
-					UserStorage.SaveAccessAndRefreshToken(user.accessToken, user.refreshToken);
 				}
 			}
 			catch (Exception ex)

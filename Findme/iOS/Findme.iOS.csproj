@@ -149,6 +149,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.2.0.31\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <ItemGroup>
     <BundleResource Include="Resources\blurredBackground.jpg" />
     <BundleResource Include="Resources\lock_white%402x.png" />
@@ -184,6 +185,26 @@
     <BundleResource Include="Resources\menuSearch.png" />
     <BundleResource Include="Resources\menu%402x.png" />
     <BundleResource Include="Resources\menu%403x.png" />
+    <BundleResource Include="Resources\moneyIcon%402x.png" />
+    <BundleResource Include="Resources\moneyIcon%403x.png" />
+    <BundleResource Include="Resources\calendarIcon%402x.png" />
+    <BundleResource Include="Resources\calendarIcon%403x.png" />
+    <BundleResource Include="Resources\doneIcon%402x.png" />
+    <BundleResource Include="Resources\doneIcon%403x.png" />
+    <BundleResource Include="Resources\addIcon%402x.png" />
+    <BundleResource Include="Resources\addIcon%403x.png" />
+    <BundleResource Include="Resources\filterIcon%402x.png" />
+    <BundleResource Include="Resources\filterIcon%403x.png" />
+    <BundleResource Include="Resources\infoIcon%402x.png" />
+    <BundleResource Include="Resources\infoIcon%403x.png" />
+    <BundleResource Include="Resources\deleteIcon%402x.png" />
+    <BundleResource Include="Resources\deleteIcon%403x.png" />
+    <BundleResource Include="Resources\hardwareIcon%402x.png" />
+    <BundleResource Include="Resources\hardwareIcon%403x.png" />
+    <BundleResource Include="Resources\info2%403x.png" />
+    <BundleResource Include="Resources\info2Icon%402x.png" />
+    <BundleResource Include="Resources\pinIcon%402x.png" />
+    <BundleResource Include="Resources\pinIcon%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Renderers\" />

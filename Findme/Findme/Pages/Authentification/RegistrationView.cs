@@ -60,7 +60,7 @@ namespace Findme
 					return;
 				}
 
-				this.authPage.loadingView.IsVisible = true;
+				this.authPage.loadingView.Show();
 				// - If it's all ok then perform the requst
 				AuthentificationManager.SharedInstance.RegisterUser(
 					email: this.emailEntry.entry.Text,
@@ -70,7 +70,7 @@ namespace Findme
 					imageBase64: this.imageInBase64
 				).ContinueWith( task => {
 
-					this.authPage.loadingView.IsVisible = false;
+					this.authPage.loadingView.Hide();
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
@@ -309,28 +309,23 @@ namespace Findme
 				})
 			);
 
-			var circleView = new RoundedBoxView () {
+			// - The square bottom view
+
+			var squareView = new BoxView () {
 				Color = ColorMap.DarkBlueColor,
-				OutlineColor = ColorMap.DarkBlueColor,
-				OutlineWidth = 1,
-				CornerRadius = 2000,
-				WidthRequest = 100,
-				HeightRequest = 100
+				BackgroundColor = ColorMap.DarkBlueColor
 			};
 
-			double circleDiametre = 700;
-			double visibleCirclePropotion = 0.15;
+			double squareHeights = 100;
 			this.Children.Add (
-				circleView,
+				squareView,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
 				Constraint.RelativeToParent( (parent) => {
-					return -(circleDiametre - parent.Width) / 2;
+					return parent.Width;
 				}),
-				Constraint.Constant(-circleDiametre * (1 - visibleCirclePropotion)),
-				Constraint.Constant(circleDiametre),
-				Constraint.Constant(circleDiametre)
+				Constraint.Constant(squareHeights)
 			);
-
-			circleView.IsVisible = false;
 
 			showLogInButton = new Button() {
 				BackgroundColor = Color.Transparent,

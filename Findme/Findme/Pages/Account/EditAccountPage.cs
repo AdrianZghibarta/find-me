@@ -45,10 +45,10 @@ namespace Findme
 
 		public void GetUserAndUpdateUI() {
 		
-			this.loadingView.IsVisible = true;
+			this.loadingView.Show ();
 			AuthentificationManager.SharedInstance.GetUser ().ContinueWith ( task => {
 
-				this.loadingView.IsVisible = false;
+				this.loadingView.Hide();
 				FindMeResponse response = (FindMeResponse)task.Result;
 				if (null != response.ErrorInfo) {
 					Device.BeginInvokeOnMainThread( () => {
@@ -95,7 +95,7 @@ namespace Findme
 					return;
 				}
 
-				this.loadingView.IsVisible = true;
+				this.loadingView.Show();
 				// - If it's all ok then perform the requst
 				AuthentificationManager.SharedInstance.EditUser(
 					firstName: this.firstNameEntry.entry.Text,
@@ -104,7 +104,7 @@ namespace Findme
 					imageBase64: this.imageInBase64
 				).ContinueWith( task => {
 
-					this.loadingView.IsVisible = false;
+					this.loadingView.Hide();
 					FindMeResponse response = (FindMeResponse)task.Result;
 					if (null != response.ErrorInfo) {
 						Device.BeginInvokeOnMainThread( () => {
@@ -378,7 +378,6 @@ namespace Findme
 
 			this.loadingView = new LoadingView ();
 			loadingView.AddTo (rootRelativeLayout);
-			this.loadingView.IsVisible = false;
 
 			this.Content = rootRelativeLayout;
 		}

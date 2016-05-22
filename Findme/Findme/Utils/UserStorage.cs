@@ -20,7 +20,7 @@ namespace Findme
 		/// </summary>
 		/// <param name="stringToSave">String to save.</param>
 		/// <param name="key">Key.</param>
-		static public void SaveString(String stringToSave, String key) {
+		static void SaveString(String stringToSave, String key) {
 			DependencyService.Get<IDeviceUserStorage> ().saveString (stringToSave: stringToSave, key: key);
 		}
 

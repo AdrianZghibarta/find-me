@@ -67,6 +67,16 @@
     <Compile Include="Pages\Notifications\NotificationsListPage.cs" />
     <Compile Include="Pages\Scan\ScanPage.cs" />
     <Compile Include="Pages\Account\EditAccountPage.cs" />
+    <Compile Include="Networking\CommandsManager.cs" />
+    <Compile Include="Models\Command.cs" />
+    <Compile Include="Pages\Commands\CommandCell.cs" />
+    <Compile Include="Pages\Commands\CommandCellData.cs" />
+    <Compile Include="CustomRenderers\ListViewButton.cs" />
+    <Compile Include="CustomControls\NoDataView.cs" />
+    <Compile Include="Models\Beacon.cs" />
+    <Compile Include="Networking\BeaconsManager.cs" />
+    <Compile Include="Pages\Beacons\BeaconCell.cs" />
+    <Compile Include="Pages\Beacons\BeaconCellData.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />

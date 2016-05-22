@@ -11,6 +11,11 @@ namespace Findme
 		public static Color DarkBlueColor = Color.FromHex("2C3E50");
 
 		/// <summary>
+		/// The color of the blue.
+		/// </summary>
+		public static Color DarkTransparentBlueColor = DarkBlueColor.MultiplyAlpha(0.3);
+
+		/// <summary>
 		/// The color of the green.
 		/// </summary>
 		public static Color GreenColor = Color.FromHex("18BC9C");
@@ -28,7 +33,12 @@ namespace Findme
 		/// <summary>
 		/// The red transparent background.
 		/// </summary>
-		public static Color RedTransparentBackground = Color.FromRgba(0.8, 0.3, 0.3, 0.1);
+		public static Color RedBackgroundColor = Color.FromHex("F34235");
+
+		/// <summary>
+		/// The red transparent background.
+		/// </summary>
+		public static Color RedTransparentBackground = RedBackgroundColor.MultiplyAlpha(0.3);
 
 		/// <summary>
 		/// The loading view background.

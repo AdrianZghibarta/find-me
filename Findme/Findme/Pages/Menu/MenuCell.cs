@@ -4,10 +4,6 @@ namespace Findme {
 
 	public class MenuCell :ViewCell
 	{
-		//	public MenuCell () : base ()
-		//	{
-		//		this.TextColor = Color.FromHex ("AAAAAA");
-		//	}
 
 		public Image imageView;
 		public Label titleLabel;

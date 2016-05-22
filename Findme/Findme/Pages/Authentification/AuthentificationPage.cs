@@ -55,9 +55,9 @@ namespace Findme
 
 			this.didGetFacebookAccessToken = ((accessToken) => {
 
-				this.loadingView.IsVisible = true;
+				this.loadingView.Show();
 				AuthentificationManager.SharedInstance.AuthentificateUserWithFacebookToken(accessToken).ContinueWith( task => {
-					this.loadingView.IsVisible = false;
+					this.loadingView.Hide();
 
 					FindMeResponse response = task.Result;
 					if (null != response.ErrorInfo) {
@@ -67,7 +67,7 @@ namespace Findme
 					}
 					else {
 						Device.BeginInvokeOnMainThread( () => {
-							Navigation.PushModalAsync(new RootPage());
+							Xamarin.Forms.Application.Current.MainPage = new RootPage();
 						});
 					}
 				});
@@ -91,18 +91,7 @@ namespace Findme
 			loginContainer.IsClippedToBounds = true;
 			registerContainer.IsClippedToBounds = true;
 
-			rootLayout.Children.Add (
-				loginContainer,
-				Constraint.Constant(0),
-				Constraint.Constant(0),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Width;
-				}),
-				Constraint.RelativeToParent( (parent) => {
-					return parent.Height;
-				})
-			);
-				
+
 			rootLayout.Children.Add (
 				registerContainer,
 				Constraint.Constant(0),
@@ -117,10 +106,8 @@ namespace Findme
 				})
 			);
 
-			// - Adding the loading view
-
 			rootLayout.Children.Add (
-				this.loadingView,
+				loginContainer,
 				Constraint.Constant(0),
 				Constraint.Constant(0),
 				Constraint.RelativeToParent( (parent) => {
@@ -131,7 +118,9 @@ namespace Findme
 				})
 			);
 
-			this.loadingView.IsVisible = false;
+			// - Adding the loading view
+
+			this.loadingView.AddTo (rootLayout);
 
 			this.loginContainer.authPage = this;
 			this.registerContainer.authPage = this;

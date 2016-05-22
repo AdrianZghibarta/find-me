@@ -16,7 +16,7 @@ using Android.OS;
 namespace Findme.Droid
 {
 	[Activity (Label = "Findme.Droid", 
-		Icon = "@drawable/icon", 
+		Icon = "@android:color/transparent", 
 		MainLauncher = true, 
 		ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation,
 		WindowSoftInputMode = SoftInput.AdjustPan)]
