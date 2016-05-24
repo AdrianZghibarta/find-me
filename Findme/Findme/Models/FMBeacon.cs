@@ -2,7 +2,7 @@
 
 namespace Findme
 {
-	public class Beacon
+	public class FMBeacon
 	{
 
 		public String _id;
@@ -14,8 +14,9 @@ namespace Findme
 		public String major;
 		public String minor;
 		public String uuid;
+		public int proximity;
 
-		public Beacon ()
+		public FMBeacon ()
 		{
 		}
 	}

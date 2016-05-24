@@ -28,12 +28,6 @@ namespace Findme
 			});
 
 			this.Add (new MenuItem () {
-				Title = "Notifications",
-				IconSource = "menuNote.png",
-				TargetType = typeof(NotificationsListPage)
-			});
-
-			this.Add (new MenuItem () {
 				Title = "Scan",
 				IconSource = "menuSearch.png",
 				TargetType = typeof(ScanPage)

@@ -64,7 +64,6 @@
     <Compile Include="Pages\Beacons\BeaconListPage.cs" />
     <Compile Include="Pages\Commands\CommandsListPage.cs" />
     <Compile Include="Pages\Items\ItemsListPage.cs" />
-    <Compile Include="Pages\Notifications\NotificationsListPage.cs" />
     <Compile Include="Pages\Scan\ScanPage.cs" />
     <Compile Include="Pages\Account\EditAccountPage.cs" />
     <Compile Include="Networking\CommandsManager.cs" />
@@ -73,10 +72,14 @@
     <Compile Include="Pages\Commands\CommandCellData.cs" />
     <Compile Include="CustomRenderers\ListViewButton.cs" />
     <Compile Include="CustomControls\NoDataView.cs" />
-    <Compile Include="Models\Beacon.cs" />
     <Compile Include="Networking\BeaconsManager.cs" />
     <Compile Include="Pages\Beacons\BeaconCell.cs" />
     <Compile Include="Pages\Beacons\BeaconCellData.cs" />
+    <Compile Include="Pages\Items\ItemCellData.cs" />
+    <Compile Include="Pages\Items\ItemCell.cs" />
+    <Compile Include="Models\FMBeacon.cs" />
+    <Compile Include="Utils\DependencyServices\IScannerInterface.cs" />
+    <Compile Include="Utils\ScannerManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
@@ -146,7 +149,6 @@
     <Folder Include="Pages\Beacons\" />
     <Folder Include="Pages\Account\" />
     <Folder Include="Pages\Commands\" />
-    <Folder Include="Pages\Notifications\" />
     <Folder Include="Pages\Scan\" />
   </ItemGroup>
 </Project>

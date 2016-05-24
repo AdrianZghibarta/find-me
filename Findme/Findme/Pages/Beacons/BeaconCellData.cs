@@ -12,7 +12,7 @@ namespace Findme
 		public String Status { get; set; }
 		public bool CanBeDeleted { get; set; }
 
-		public BeaconCellData (Beacon beacon)
+		public BeaconCellData (FMBeacon beacon)
 		{
 			if (beacon._id != null) {
 				this.Id = beacon._id;
@@ -38,13 +38,13 @@ namespace Findme
 			this.CanBeDeleted = !beacon.isAttached;
 		}
 
-		public static List<BeaconCellData> GetBeconsCellDataList(List<Beacon> beaconsList) {
+		public static List<BeaconCellData> GetBeconsCellDataList(List<FMBeacon> beaconsList) {
 
 			List<BeaconCellData> listToReturn = new List<BeaconCellData>();
 
 			if (beaconsList != null) {
 
-				foreach (Beacon beacon in beaconsList) {
+				foreach (FMBeacon beacon in beaconsList) {
 					BeaconCellData beaconCellData = new BeaconCellData (beacon);
 					listToReturn.Add (beaconCellData);
 				}

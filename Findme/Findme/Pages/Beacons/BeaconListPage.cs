@@ -88,7 +88,7 @@ namespace Findme
 				}
 				else {
 
-					List<Beacon> beaconList = (List<Beacon>)response.Result;
+					List<FMBeacon> beaconList = (List<FMBeacon>)response.Result;
 					this.beaconsCelldata = BeaconCellData.GetBeconsCellDataList(beaconList);
 
 					if (this.beaconsCelldata.Count > 0) {

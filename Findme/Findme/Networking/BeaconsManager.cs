@@ -50,7 +50,7 @@ namespace Findme
 				var result = await client.GetAsync(requestUrl);
 				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "beacons");
 
-				List<Beacon> beaconList = JsonConvert.DeserializeObject<List<Beacon>>((String)findMeResponse.Result);
+				List<FMBeacon> beaconList = JsonConvert.DeserializeObject<List<FMBeacon>>((String)findMeResponse.Result);
 				if (null == beaconList) {
 					findMeResponse.ErrorInfo = "No Object Found";
 				}

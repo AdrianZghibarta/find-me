@@ -52,10 +52,10 @@ namespace Findme
 					var action = await DisplayActionSheet ("Select command type", "Cancel", null, "Delivered", "Pending");
 					if (action == "Delivered") {
 						this.currentFilter = CommandsManager.DeliveredCommandsStatus;
-						this.GetCommandsForCurrentFilter();
+						this.commandListView.BeginRefresh();
 					} else if (action == "Pending") {
 						this.currentFilter = CommandsManager.PendingCommandStatus;
-						this.GetCommandsForCurrentFilter();
+						this.commandListView.BeginRefresh();
 					}
 				}
 			));
