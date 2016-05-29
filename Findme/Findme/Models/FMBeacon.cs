@@ -19,6 +19,15 @@ namespace Findme
 		public FMBeacon ()
 		{
 		}
+
+		public String GetMinorAndMajorInformation() {
+
+			return this.major + "/" + minor;
+		}
+
+		public String GetGeneralInformation() {
+			return this.brand + " " + this.range + " range";
+		}
 	}
 }
 

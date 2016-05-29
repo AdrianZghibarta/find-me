@@ -17,9 +17,9 @@ namespace Findme
 			var roundedBackground = new RoundedBoxView () {
 				Color = Color.White,
 				CornerRadius = 4,
-				OutlineWidth = 2,
-				OutlineColor = ColorMap.DarkBlueColor
+				OutlineWidth = 2
 			};
+			roundedBackground.SetBinding (RoundedBoxView.OutlineColorPropriety, "StatusColor");
 
 			relativeLayout.Children.Add (
 				roundedBackground,
@@ -35,102 +35,179 @@ namespace Findme
 
 			// - The content for all fields
 
-			// - Date fields
-			var dateImage = new Image {
+			// - Name fields
+			var nameImage = new Image {
 				HeightRequest = 15,
 				WidthRequest = 15,
 				Source = new FileImageSource() { 
-					File = "calendarIcon.png" 
+					File = "nameIcon.png" 
 				}
 			};
 
-			var dateLabel = new Label {
+			var nameLabel = new Label {
 				TextColor = ColorMap.DarkBlueColor,
 				HeightRequest = 25,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
 				VerticalTextAlignment = TextAlignment.Center
 			};
-			dateLabel.SetBinding (Label.TextProperty, "DateValue");
+			nameLabel.SetBinding (Label.TextProperty, "Name");
 
-			var dateStackContent = new StackLayout() {
+			var nameStackLayout = new StackLayout() {
 
 				BackgroundColor = Color.Transparent,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 10,
 				Children = {
-					dateImage,
-					dateLabel
+					nameImage,
+					nameLabel
 				}
 			};
 
-			// - Price and quantity fields
-			var priceImage = new Image {
+			// - Description fields
+			var descriptionImage = new Image {
 				HeightRequest = 15,
 				WidthRequest = 15,
 				Source = new FileImageSource() { 
-					File = "moneyIcon.png" 
+					File = "info2Icon.png" 
 				}
 			};
 
-			var priceLabel = new Label {
+			var descriptionLabel = new Label {
 				TextColor = ColorMap.DarkBlueColor,
 				HeightRequest = 25,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
 				VerticalTextAlignment = TextAlignment.Center
 			};
-			priceLabel.SetBinding (Label.TextProperty, "PriceAndQuantityValue");
+			descriptionLabel.SetBinding (Label.TextProperty, "Description");
 
-			var priceStackLayout = new StackLayout() {
+			var descriptionStackLayout = new StackLayout() {
 
 				BackgroundColor = Color.Transparent,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 10,
 				Children = {
-					priceImage,
-					priceLabel
+					descriptionImage,
+					descriptionLabel
 				}
 			};
 
-			// - The confirm / cancel options flow
-
-			// - Price and quantity fields
-			var doneImage = new Image {
+			// - Category fields
+			var categoryImage = new Image {
 				HeightRequest = 15,
 				WidthRequest = 15,
 				Source = new FileImageSource() { 
-					File = "doneIcon.png" 
+					File = "categoryIcon.png" 
 				}
 			};
 
-			var doneLabel = new Label {
+			var categoryLabel = new Label {
 				TextColor = ColorMap.DarkBlueColor,
 				HeightRequest = 25,
 				FontSize = 16,
 				FontAttributes = FontAttributes.Bold,
-				VerticalTextAlignment = TextAlignment.Center,
-				Text = "Command is delivered"
+				VerticalTextAlignment = TextAlignment.Center
 			};
+			categoryLabel.SetBinding (Label.TextProperty, "Category");
 
-			var doneStackLayout = new StackLayout() {
+			var categoryStackLayout = new StackLayout() {
 
 				BackgroundColor = Color.Transparent,
 				Orientation = StackOrientation.Horizontal,
 				Spacing = 10,
 				Children = {
-					doneImage,
-					doneLabel
+					categoryImage,
+					categoryLabel
 				}
 			};
-			doneStackLayout.SetBinding (StackLayout.IsVisibleProperty, "IsDelivered");
 
-			var confirmButton = new ListViewButton () { 
-				Text = "Confirm",
+			// - Minor Major fields
+			var minorMajorImage = new Image {
+				HeightRequest = 15,
+				WidthRequest = 15,
+				Source = new FileImageSource() { 
+					File = "hardwareIcon.png" 
+				}
 			};
-			confirmButton.SetBinding (Button.CommandParameterProperty, "Id");
-			confirmButton.SetBinding (Button.IsVisibleProperty, "NeedToShowActions");
-			confirmButton.Clicked += (object sender, EventArgs e) => {
+
+			var minorMajorLabel = new Label {
+				TextColor = ColorMap.DarkBlueColor,
+				HeightRequest = 25,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				VerticalTextAlignment = TextAlignment.Center
+			};
+			minorMajorLabel.SetBinding (Label.TextProperty, "MinorMajor");
+
+			var minorMajorStackLayout = new StackLayout() {
+
+				BackgroundColor = Color.Transparent,
+				Orientation = StackOrientation.Horizontal,
+				Spacing = 10,
+				Children = {
+					minorMajorImage,
+					minorMajorLabel
+				}
+			};
+
+			// - The container for general information fields
+
+			var generalInformationContainer = new StackLayout {
+
+				Padding = new Thickness (0, 0, 0, 0),
+				Spacing = 2,
+				Orientation = StackOrientation.Vertical,
+				HorizontalOptions = LayoutOptions.Start,
+				Children = { 
+					nameStackLayout,
+					descriptionStackLayout,
+					categoryStackLayout,
+					minorMajorStackLayout
+				}
+			};
+
+			var itemImage = new ImageCircle () {
+				BorderWidth = 3
+			};
+			itemImage.SetBinding (ImageCircle.BorderColorPropriety, "StatusColor");
+			itemImage.SetBinding (ImageCircle.SourceProperty, "ItemImageSource");
+
+			var itemImageContainer = new RelativeLayout () { 
+				HeightRequest = 60,
+				WidthRequest = 60
+			};
+			itemImageContainer.Children.Add (
+
+				itemImage,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
+				Constraint.Constant(50),
+				Constraint.Constant(50)
+			);
+
+			var upperContainer = new StackLayout () {
+
+				Padding = new Thickness (0, 0, 0, 0),
+				Spacing = 0,
+				Orientation = StackOrientation.Horizontal,
+				HorizontalOptions = LayoutOptions.Start,
+				Children = { 
+					itemImageContainer,
+					generalInformationContainer
+				}
+			};
+
+			// - The Delete / Show Repports options flow
+
+			var deleteButton = new ListViewButton () { 
+				TextColor = ColorMap.RedBackgroundColor,
+				BorderColor = ColorMap.RedBackgroundColor,
+				BackgroundColor = ColorMap.RedTransparentBackground,
+				Text = "Delete",
+			};
+			deleteButton.SetBinding (Button.CommandParameterProperty, "Id");
+			deleteButton.Clicked += (object sender, EventArgs e) => {
 
 				var button = (Button)sender;
 				var parameterToSend = (String)button.CommandParameter;
@@ -139,9 +216,9 @@ namespace Findme
 				Element currentParent = this.Parent;
 				while (parentDepth > 0) {
 
-					CommandsListPage commandListPage = currentParent as CommandsListPage;
-					if (commandListPage != null) {
-						commandListPage.ConfirmCommand(parameterToSend).ContinueWith( task => {} );
+					ItemsListPage itemListPage = currentParent as ItemsListPage;
+					if (itemListPage != null) {
+						itemListPage.DeleteItem(parameterToSend).ContinueWith( task => {} );
 						break;
 					} else {
 						currentParent = currentParent.Parent;
@@ -150,15 +227,12 @@ namespace Findme
 				}
 			};
 
-			var cancelButton = new ListViewButton () { 
-				TextColor = ColorMap.RedBackgroundColor,
-				BorderColor = ColorMap.RedBackgroundColor,
-				BackgroundColor = ColorMap.RedTransparentBackground,
+			var showRepportsButton = new ListViewButton () {
 				Text = "Cancel"
 			};
-			cancelButton.SetBinding (Button.CommandParameterProperty, "Id");
-			cancelButton.SetBinding (Button.IsVisibleProperty, "NeedToShowActions");
-			cancelButton.Clicked += (object sender, EventArgs e) => {
+			showRepportsButton.SetBinding (Button.CommandParameterProperty, "Id");
+			showRepportsButton.SetBinding (Button.IsVisibleProperty, "NeedToShowFoundRepports");
+			showRepportsButton.Clicked += (object sender, EventArgs e) => {
 
 				var button = (Button)sender;
 				var parameterToSend = (String)button.CommandParameter;
@@ -167,9 +241,9 @@ namespace Findme
 				Element currentParent = this.Parent;
 				while (parentDepth > 0) {
 
-					CommandsListPage commandListPage = currentParent as CommandsListPage;
-					if (commandListPage != null) {
-						commandListPage.CancelCommand(parameterToSend).ContinueWith( task => {} );
+					ItemsListPage itemListPage = currentParent as ItemsListPage;
+					if (itemListPage != null) {
+						itemListPage.ShowFoundRepports(parameterToSend).ContinueWith( task => {} );
 						break;
 					} else {
 						currentParent = currentParent.Parent;
@@ -183,19 +257,7 @@ namespace Findme
 			};
 
 			actionFlowRelativeLayout.Children.Add (
-				doneStackLayout,
-				Constraint.Constant(0),
-				Constraint.Constant(0),
-				Constraint.RelativeToParent( parent => {
-					return parent.Width;
-				}),
-				Constraint.RelativeToParent( parent => {
-					return parent.Height;
-				})
-			);
-
-			actionFlowRelativeLayout.Children.Add (
-				confirmButton,
+				deleteButton,
 				Constraint.Constant(0),
 				Constraint.Constant(0),
 				Constraint.RelativeToParent( parent => {
@@ -207,7 +269,7 @@ namespace Findme
 			);
 
 			actionFlowRelativeLayout.Children.Add (
-				cancelButton,
+				showRepportsButton,
 				Constraint.RelativeToParent( parent => {
 					return (parent.Width - 10) / 2 + 10;
 				}),
@@ -225,12 +287,11 @@ namespace Findme
 			var verticalContainer = new StackLayout {
 
 				Padding = new Thickness (0, 0, 0, 0),
-				Spacing = 2,
+				Spacing = 15,
 				Orientation = StackOrientation.Vertical,
 				HorizontalOptions = LayoutOptions.Start,
 				Children = { 
-					dateStackContent,
-					priceStackLayout,
+					upperContainer,
 					actionFlowRelativeLayout
 				}
 			};
