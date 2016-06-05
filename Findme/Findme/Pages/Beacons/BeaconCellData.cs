@@ -32,7 +32,7 @@ namespace Findme
 			if (beacon.isAttached) {
 				this.Status = "Attached, can't be deleted";
 			} else {
-				this.Status = "Bussy";
+				this.Status = "Not attached";
 			}
 		
 			this.CanBeDeleted = !beacon.isAttached;

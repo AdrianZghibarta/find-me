@@ -4,6 +4,7 @@ using XLabs.Ioc;
 using System.Threading.Tasks;
 using XLabs.Platform.Services.Media;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Findme
 {
@@ -12,20 +13,35 @@ namespace Findme
 		public EditItemPage ()
 		{
 			this.Title = "Add Item";
-			this.setUpLayout ();
+			this.setUpOnlyLoadingIndicator ();
 			this.getCategoryesAndBeacons ();
-			this.setButtonHandlers ();
-			this.updateUIForItem ();
 		}
 
 		public EditItemPage (Item item) {
 
 			this.Title = "Edit Item";
+			this.setUpOnlyLoadingIndicator ();
 			this.itemToEdit = item;
-			this.setUpLayout ();
 			this.getCategoryesAndBeacons ();
-			this.setButtonHandlers ();
-			this.updateUIForItem ();
+		}
+
+		private void setUpOnlyLoadingIndicator() {
+
+			var rootLayout = new RelativeLayout () { 
+				BackgroundColor = ColorMap.GreenColor
+			};
+			this.loadingView = new LoadingView ();
+			this.loadingView.AddTo (rootLayout);
+			this.Content = rootLayout;
+		}
+
+		private void setUpAllLayout() {
+
+			Device.BeginInvokeOnMainThread ( () => {
+				this.setUpLayout ();
+				this.setButtonHandlers ();
+				this.updateUIForItem ();
+			});
 		}
 
 		#region -> UI Elements
@@ -34,14 +50,13 @@ namespace Findme
 		Image itemImage;
 		InputView nameEntry;
 		InputView descriptionEntry;
-		InputView categoryEntry;
-		InputView beaconEntry;
 		Button selectImageButton;
 		LoadingView loadingView;
+		Button detachButton;
 		Button submitButton;
 		Picker categoryPicker;
 		Picker beaconPicker;
-
+		Picker statusPicker;
 		#endregion
 
 		#region -> Proprietes
@@ -52,6 +67,8 @@ namespace Findme
 		private List<FMBeacon> beaconsList;
 		private List<Category> categoriesList;
 		public Item itemToEdit;
+		public Item itemToAdd = new Item();
+		public ItemsListPage itemListPage;
 
 		#endregion
 
@@ -62,10 +79,6 @@ namespace Findme
 			if (this.itemToEdit != null) {
 				this.nameEntry.entry.Text = this.itemToEdit.name;
 				this.descriptionEntry.entry.Text = this.itemToEdit.description;
-				this.categoryEntry.entry.Text = this.itemToEdit.category;
-				if (this.itemToEdit.beacon != null) {
-					this.beaconEntry.entry.Text = this.itemToEdit.beacon.GetGeneralInformation ();
-				}
 				var photoUrl = NetworkingUrls.BASE_URL + this.itemToEdit.photoUrl;
 				this.itemImage.Source = ImageSource.FromUri(new Uri(photoUrl));	
 			}
@@ -74,7 +87,7 @@ namespace Findme
 		private void getCategoryesAndBeacons() {
 
 			this.loadingView.Show ();
-			BeaconsManager.SharedInstance.GetUserBeacons ().ContinueWith ( task => {
+			BeaconsManager.SharedInstance.GetUserBeacons (BeaconsManager.AvailableBeaconType).ContinueWith ( task => {
 
 				FindMeResponse response = (FindMeResponse)task.Result;
 
@@ -84,13 +97,21 @@ namespace Findme
 					});
 				}
 				else {
+					this.beaconsList = new List<FMBeacon>();
+					if (this.itemToEdit != null) {
+						if (this.itemToEdit.beacon != null) {
+							this.beaconsList.Add(this.itemToEdit.beacon);
+						}
+					}
+					var availableBeacons = (List<FMBeacon>)response.Result;
+					foreach (FMBeacon beacon in availableBeacons) {
+						this.beaconsList.Add(beacon);
+					}
 
-					this.beaconsList = (List<FMBeacon>)response.Result;
-					// - Filter only the beacons that are not attaced
 					this.hasBeacons = true;
 					if (this.hasCategories) {
 						this.loadingView.Hide();
-						this.setUpPickers();
+						this.setUpAllLayout();
 					}
 				}
 			});
@@ -111,7 +132,7 @@ namespace Findme
 					this.hasCategories = true;
 					if (this.hasBeacons) {
 						this.loadingView.Hide();
-						this.setUpPickers();
+						this.setUpAllLayout();
 					}
 				}
 			});
@@ -119,11 +140,13 @@ namespace Findme
 
 		public bool isDataValid() {
 
+			if (this.categoryPicker.SelectedIndex == -1 || this.beaconPicker.SelectedIndex == -1 || this.statusPicker.SelectedIndex == -1) {
+				return false;
+			}
+
 			Entry[] entriesToValidate = new Entry[] {
 				nameEntry.entry, 
-				descriptionEntry.entry,
-				categoryEntry.entry,
-				beaconEntry.entry
+				descriptionEntry.entry
 			};
 			return Validator.ValidateEntires (entriesToValidate);
 		}
@@ -138,33 +161,81 @@ namespace Findme
 					return;
 				}
 
-				//this.loadingView.Show();
+				this.loadingView.Show();
 				// - If it's all ok then perform the requst
-//				AuthentificationManager.SharedInstance.EditUser(
-//					firstName: this.firstNameEntry.entry.Text,
-//					lastName: this.lastNameEntry.entry.Text,
-//					password: this.passwordEntry.entry.Text,
-//					imageBase64: this.imageInBase64
-//				).ContinueWith( task => {
-//
-//					this.loadingView.Hide();
-//					FindMeResponse response = (FindMeResponse)task.Result;
-//					if (null != response.ErrorInfo) {
-//						Device.BeginInvokeOnMainThread( () => {
-//							this.DisplayAlert("Error", response.ErrorInfo, "Ok");
-//						});
-//					}
-//					else {
-//						Device.BeginInvokeOnMainThread( () => {
-//							this.DisplayAlert("Succes", "User was successful edited.", "Ok");
-//						});
-//					}
-//				});
+				if (this.itemToEdit != null ) {
+					// We need to edit the item
+					this.itemToEdit.name = this.nameEntry.entry.Text;
+					this.itemToEdit.description = this.descriptionEntry.entry.Text;
+
+					ItemsManager.SharedInstance.EditItem(this.itemToEdit, this.imageInBase64).ContinueWith( task => {
+
+						this.loadingView.Hide();
+						FindMeResponse response = (FindMeResponse)task.Result;
+						if (null != response.ErrorInfo) {
+							Device.BeginInvokeOnMainThread( () => {
+								this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+							});
+						}
+						else {
+							Device.BeginInvokeOnMainThread( () => {
+								this.itemListPage.itemsListView.BeginRefresh();
+								Navigation.PopAsync();
+							});
+						}
+					});
+				}
+				else {
+
+					// We need to add the item
+					this.itemToAdd.name = this.nameEntry.entry.Text;
+					this.itemToAdd.description = this.descriptionEntry.entry.Text;
+
+					ItemsManager.SharedInstance.AddItem(this.itemToAdd, this.imageInBase64).ContinueWith( task => {
+
+						this.loadingView.Hide();
+						FindMeResponse response = (FindMeResponse)task.Result;
+						if (null != response.ErrorInfo) {
+							Device.BeginInvokeOnMainThread( () => {
+								this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+							});
+						}
+						else {
+							Device.BeginInvokeOnMainThread( () => {
+								this.itemListPage.itemsListView.BeginRefresh();
+								Navigation.PopAsync();
+							});
+						}
+					});
+				}
 			};
 
 			this.selectImageButton.Clicked += (object sender, EventArgs e) => {
 
 				this.selectPhoto().ContinueWith( task => {});
+			};
+
+			this.detachButton.Clicked += (object sender, EventArgs e) => {
+
+				// - The request to detach the current iBeacon
+				this.loadingView.Show();
+				ItemsManager.SharedInstance.DetachiBeaconFromItem(this.itemToEdit).ContinueWith( task => {
+
+					this.loadingView.Hide();
+					FindMeResponse response = (FindMeResponse)task.Result;
+					if (null != response.ErrorInfo) {
+						Device.BeginInvokeOnMainThread( () => {
+							this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+						});
+					}
+					else {
+						Device.BeginInvokeOnMainThread( () => {
+							this.itemListPage.itemsListView.BeginRefresh();
+							this.beaconPicker.IsVisible = true;
+							this.detachButton.IsVisible = false;
+						});
+					}
+				});
 			};
 		}
 
@@ -190,18 +261,79 @@ namespace Findme
 
 		private void setUpPickers() {
 
-			this.categoryEntry.entry.Focused += (object sender, FocusEventArgs e) => {
-				//this.categoryEntry.entry.Unfocus();
-				this.categoryPicker.IsVisible = true;
-				this.categoryPicker.Focus();
-				this.beaconPicker.IsVisible = false;
+			// - Set up the category picker --------------------------------------------
+			foreach (Category category in this.categoriesList) {
+				this.categoryPicker.Items.Add (category.name);
+			}
+
+			if (this.itemToEdit != null) {
+				for (int i = 0; i < this.categoryPicker.Items.Count; i++) {
+
+					if (this.categoryPicker.Items [i] == this.itemToEdit.category) {
+						this.categoryPicker.SelectedIndex = i;
+						break;
+					}
+				}
+			} else {
+				this.categoryPicker.SelectedIndex = -1;
+			}
+
+			this.categoryPicker.SelectedIndexChanged += (object sender, EventArgs e) => {
+				if (this.itemToEdit != null) {
+					this.itemToEdit.category = this.categoryPicker.Items[this.categoryPicker.SelectedIndex];
+				} else {
+					this.itemToAdd.category = this.categoryPicker.Items[this.categoryPicker.SelectedIndex];
+				}
 			};
 
-			this.beaconEntry.entry.Focused += (object sender, FocusEventArgs e) => {
-				this.beaconEntry.entry.Unfocus();
-				this.beaconPicker.IsVisible = true;
-				this.beaconPicker.Focus();
-				this.categoryPicker.IsVisible = false;
+			// - Set up the beacon picker -----------------------------------------------
+
+			foreach (FMBeacon beacon in this.beaconsList) {
+				this.beaconPicker.Items.Add (beacon.brand + ", " + beacon.range + " r. " + beacon.major + "/" + beacon.minor);
+			}
+
+			this.beaconPicker.SelectedIndex = -1;
+
+			this.beaconPicker.SelectedIndexChanged += (object sender, EventArgs e) => {
+
+				if (this.itemToEdit != null) {
+					this.itemToEdit.beacon = this.beaconsList[this.beaconPicker.SelectedIndex];
+				} else {
+					this.itemToAdd.beacon = this.beaconsList[this.beaconPicker.SelectedIndex];
+				}
+			};
+
+			// - Set up the status picker -----------------------------------------------
+
+			this.statusPicker.Items.Add("Found");
+			this.statusPicker.Items.Add("Loosed");
+
+			if (this.itemToEdit != null) {
+				if (this.itemToEdit.isLosed == true) {
+					this.statusPicker.SelectedIndex = 1;
+				} else {
+					this.statusPicker.SelectedIndex = 0;
+				}
+			} else {
+				this.statusPicker.SelectedIndex = -1;
+			}
+
+			this.statusPicker.SelectedIndexChanged += (object sender, EventArgs e) => {
+
+				if (this.statusPicker.SelectedIndex == 0) {
+					if (this.itemToEdit != null) {
+						this.itemToEdit.isLosed = false;
+					} else {
+						this.itemToAdd.isLosed = false;
+					}
+				}
+				else {
+					if (this.itemToEdit != null) {
+						this.itemToEdit.isLosed = true;
+					} else {
+						this.itemToAdd.isLosed = true;
+					}
+				}
 			};
 		}
 
@@ -238,10 +370,16 @@ namespace Findme
 				HeightRequest = imageDim + 10
 			};
 
-			this.itemImage = new ImageCircle () {
+			var placeholderImage = new ImageCircle () {
 				Source = new FileImageSource () {
 					File = "photoPlaceholder.png"
 				},
+				BorderColor = Color.Transparent,
+				BorderWidth = 0,
+				Aspect = Aspect.AspectFill
+			};
+
+			this.itemImage = new ImageCircle () {
 				BorderColor = Color.White,
 				BorderWidth = 2,
 				Aspect = Aspect.AspectFill
@@ -251,6 +389,16 @@ namespace Findme
 				BackgroundColor = Color.Transparent,
 				Text = ""
 			};
+
+			imageContainer.Children.Add (
+				placeholderImage,
+				Constraint.RelativeToParent( (parent) => {
+					return (parent.Width - imageDim) / 2;
+				}),
+				Constraint.Constant(0),
+				Constraint.Constant(imageDim),
+				Constraint.Constant(imageDim)
+			);
 
 			imageContainer.Children.Add (
 				itemImage,
@@ -294,27 +442,80 @@ namespace Findme
 			descriptionEntry.entry.Placeholder = "Description";
 			descriptionEntry.HeightRequest = textEntriesHeight;
 
-			categoryEntry = new InputView ();
-			categoryEntry.entry.TextColor = Color.White;
-			categoryEntry.entry.PlaceholderColor = Color.White;
-			categoryEntry.bottomLine.BackgroundColor = Color.White;
-			categoryEntry.image.Source = new FileImageSource () { File = "categoryIconWhite.png"}; 
-			categoryEntry.entry.Placeholder = "Category";
-			categoryEntry.HeightRequest = textEntriesHeight;
-
-			beaconEntry = new InputView ();
-			beaconEntry.entry.TextColor = Color.White;
-			beaconEntry.entry.PlaceholderColor = Color.White;
-			beaconEntry.bottomLine.BackgroundColor = Color.White;
-			beaconEntry.image.Source = new FileImageSource () { File = "hardwareIconWhite.png"}; 
-			beaconEntry.entry.Placeholder = "Beacon";
-			beaconEntry.HeightRequest = textEntriesHeight;
-
-			HeaderView addressHeader = new HeaderView() {
-				Title = "Address Info",
+			HeaderView pickerHeader = new HeaderView() {
+				Title = "Picker Values",
 				ImagesName = "circle.png",
 				HeightRequest = textEntriesHeight
 			};
+
+			// - Pickers
+			this.categoryPicker = new Picker() {
+				Title = "Select Category",
+				HeightRequest = textEntriesHeight,
+				BackgroundColor = ColorMap.BlackTransparentBackground,
+			};
+
+			this.statusPicker = new Picker () { 
+				Title = "Select Status",
+				HeightRequest = textEntriesHeight,
+				BackgroundColor = ColorMap.BlackTransparentBackground
+			};
+
+			this.beaconPicker = new Picker () { 
+				Title = "Select iBeacon",
+				HeightRequest = textEntriesHeight,
+				BackgroundColor = ColorMap.BlackTransparentBackground,
+			};
+
+			this.detachButton = new Button() {
+				BackgroundColor = ColorMap.RedTransparentBackground,
+				TextColor = Color.White,
+				BorderRadius = 3,
+				BorderColor = Color.White,
+				BorderWidth = 2,
+				FontSize = 16,
+				FontAttributes = FontAttributes.Bold,
+				Text = "Detach iBeacon",
+				HeightRequest = textEntriesHeight
+			};
+
+			var iBeaconContainer = new RelativeLayout () {
+				HeightRequest = textEntriesHeight
+			};
+
+			if (this.itemToEdit != null && this.itemToEdit.beacon != null) {
+				this.detachButton.IsVisible = true;
+				this.beaconPicker.IsVisible = false;
+			} else {
+				this.detachButton.IsVisible = false;
+				this.beaconPicker.IsVisible = true;
+			}
+
+			iBeaconContainer.Children.Add (
+				beaconPicker,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
+				Constraint.RelativeToParent( parent => {
+					return parent.Width;
+				}),
+				Constraint.RelativeToParent( parent => {
+					return parent.Height;
+				})
+			);
+
+			iBeaconContainer.Children.Add (
+				detachButton,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
+				Constraint.RelativeToParent( parent => {
+					return parent.Width;
+				}),
+				Constraint.RelativeToParent( parent => {
+					return parent.Height;
+				})
+			);
+
+			this.setUpPickers ();
 
 			var bottomSeparatorView = new RelativeLayout () { 
 				HeightRequest = 5
@@ -341,8 +542,10 @@ namespace Findme
 					generalInfoHeader,
 					this.nameEntry,
 					this.descriptionEntry,
-					this.categoryEntry,
-					this.beaconEntry,
+					pickerHeader,
+					this.statusPicker,
+					this.categoryPicker,
+					iBeaconContainer,
 					bottomSeparatorView,
 					this.submitButton,
 					new RelativeLayout() {
@@ -367,45 +570,6 @@ namespace Findme
 				})
 			);
 
-			// - Pickers
-			this.categoryPicker = new Picker() {
-				Title = "Select Category",
-				BackgroundColor = ColorMap.DarkBlueColor
-			};
-
-			this.beaconPicker = new Picker () { 
-				Title = "Select iBeacon",
-				BackgroundColor = ColorMap.DarkBlueColor
-			};
-
-			var pickerHeight = 40;
-
-			rootRelativeLayout.Children.Add (
-				categoryPicker,
-				Constraint.Constant(0),
-				Constraint.RelativeToParent( parent => {
-					return parent.Height - pickerHeight;
-				}),
-				Constraint.RelativeToParent( parent => {
-					return parent.Width;
-				}),
-				Constraint.Constant(pickerHeight)
-			);
-
-			rootRelativeLayout.Children.Add (
-				beaconPicker,
-				Constraint.Constant(0),
-				Constraint.RelativeToParent( parent => {
-					return parent.Height - pickerHeight;
-				}),
-				Constraint.RelativeToParent( parent => {
-					return parent.Width;
-				}),
-				Constraint.Constant(pickerHeight)
-			);
-
-			this.categoryPicker.IsVisible = false;
-			this.beaconPicker.IsVisible = false;
 			this.loadingView = new LoadingView ();
 			loadingView.AddTo (rootRelativeLayout);
 

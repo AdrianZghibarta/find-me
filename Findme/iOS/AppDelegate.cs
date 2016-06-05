@@ -19,6 +19,8 @@ namespace Findme.iOS
 			if (!Resolver.IsSet)
 				this.SetIoc();
 
+			Xamarin.FormsMaps.Init ();
+
 			UIApplication.SharedApplication.SetStatusBarStyle(UIStatusBarStyle.LightContent, false);
 
 			LoadApplication (new App ());

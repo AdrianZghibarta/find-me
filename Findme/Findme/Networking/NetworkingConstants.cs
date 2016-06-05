@@ -23,11 +23,14 @@ namespace Findme
 		public static readonly String EDIT_COMMAND_URL = NetworkingUrls.VERSION_ONE_ROOT + "command/edit";
 
 		public static readonly String GET_ITEMS_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/getAll";
-		public static readonly String EDIT_ITEM_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/delete";
-		public static readonly String DELETE_ITEM_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/edit";
+		public static readonly String EDIT_ITEM_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/edit";
+		public static readonly String DELETE_ITEM_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/delete";
 		public static readonly String ADD_ITEM_URL = NetworkingUrls.VERSION_ONE_ROOT + "item/create";
 
 		public static readonly String GET_CATEGORIES_URL = NetworkingUrls.VERSION_ONE_ROOT + "category/getAll";
+
+		public static readonly String GET_REPPORTS_URL = NetworkingUrls.VERSION_ONE_ROOT + "report/getAll";
+		public static readonly String ADD_REPPORT_URL = NetworkingUrls.VERSION_ONE_ROOT + "report/create";
 
 		public static readonly String GET_USER_BEACONS_URL = NetworkingUrls.VERSION_ONE_ROOT + "beacon/user";
 		public static readonly String DELETE_BEACON = NetworkingUrls.VERSION_ONE_ROOT + "beacon/delete";

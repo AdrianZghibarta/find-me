@@ -167,7 +167,17 @@ namespace Findme
 				}
 			};
 
+			var placeholderImage = new ImageCircle () {
+				Source = new FileImageSource () {
+					File = "photoPlaceholder.png"
+				},
+				BorderColor = Color.Transparent,
+				BorderWidth = 0,
+				Aspect = Aspect.AspectFill
+			};
+
 			var itemImage = new ImageCircle () {
+				Aspect = Aspect.AspectFill,
 				BorderWidth = 3
 			};
 			itemImage.SetBinding (ImageCircle.BorderColorPropriety, "StatusColor");
@@ -177,6 +187,16 @@ namespace Findme
 				HeightRequest = 60,
 				WidthRequest = 60
 			};
+
+			itemImageContainer.Children.Add (
+
+				placeholderImage,
+				Constraint.Constant(0),
+				Constraint.Constant(0),
+				Constraint.Constant(50),
+				Constraint.Constant(50)
+			);
+
 			itemImageContainer.Children.Add (
 
 				itemImage,
@@ -228,7 +248,7 @@ namespace Findme
 			};
 
 			var showRepportsButton = new ListViewButton () {
-				Text = "Cancel"
+				Text = "Repports"
 			};
 			showRepportsButton.SetBinding (Button.CommandParameterProperty, "Id");
 			showRepportsButton.SetBinding (Button.IsVisibleProperty, "NeedToShowFoundRepports");

@@ -3,6 +3,7 @@ using Xamarin.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Linq;
 
 namespace Findme
 {
@@ -12,7 +13,7 @@ namespace Findme
 
 		LoadingView loadingView = new LoadingView();
 		NoDataView noDataView = new NoDataView ();
-		ListView itemsListView = new ListView();
+		public ListView itemsListView = new ListView();
 		HeaderView headerView = new HeaderView();
 
 		#endregion
@@ -41,7 +42,10 @@ namespace Findme
 			this.itemsListView.ItemSelected += (object sender, SelectedItemChangedEventArgs e) => {
 
 				if (this.itemsListView.SelectedItem != null) {
-					EditItemPage editItemPage = new EditItemPage(this.itemsList[0]);
+					ItemCellData selectedItemCellData = (ItemCellData)this.itemsListView.SelectedItem;
+					Item itemToEdit = this.itemsList.Where(x => x._id == selectedItemCellData.Id).ToList().First();
+					EditItemPage editItemPage = new EditItemPage(itemToEdit);
+					editItemPage.itemListPage = this;
 					Navigation.PushAsync(editItemPage);
 					this.itemsListView.SelectedItem = null;
 				}
@@ -55,6 +59,7 @@ namespace Findme
 			ToolbarItems.Add (new ToolbarItem( "New", "addIcon.png", () =>
 				{
 					EditItemPage editItemPage = new EditItemPage();
+					editItemPage.itemListPage = this;
 					Navigation.PushAsync(editItemPage);
 				}
 			));
@@ -68,20 +73,38 @@ namespace Findme
 
 			var action = await DisplayActionSheet ("This will delete the item !", "Cancel", null, "Confirm");
 			if (action == "Confirm") {
+				this.loadingView.Show ();
 				// - Implement the item delete
+				ItemsManager.SharedInstance.DeleteItem(itemId).ContinueWith( task => {
+
+					this.loadingView.Hide();
+
+					FindMeResponse response = (FindMeResponse)task.Result;
+
+					if (null != response.ErrorInfo) {
+						Device.BeginInvokeOnMainThread( () => {
+							this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+						});
+					}
+					else {
+						this.GetItems();
+					}
+				});
 			}
 		}
 
 		public async Task ShowFoundRepports(String itemId) {
 
-			// - TODO Show found repports for the selected item
+			var item = this.itemsList.Where (x => x._id == itemId).ToArray ().FirstOrDefault ();
+			RepportsListPage repportsListPage = new RepportsListPage (item._id, item.name);
+			await Navigation.PushAsync (repportsListPage);
 		}
 
 		#endregion
 
 		#region -> Web Work
 
-		private void GetItems() {
+		public void GetItems() {
 
 			ItemsManager.SharedInstance.GetItems().ContinueWith ( task => {
 
@@ -89,6 +112,7 @@ namespace Findme
 
 				Device.BeginInvokeOnMainThread( () => {
 					this.itemsListView.EndRefresh();
+					this.loadingView.Hide();
 				});
 
 				if (null != response.ErrorInfo) {
@@ -150,7 +174,7 @@ namespace Findme
 					return parent.Width;
 				}),
 				Constraint.RelativeToParent( parent => {
-					return parent.Height;
+					return parent.Height - 45;
 				})
 			);
 

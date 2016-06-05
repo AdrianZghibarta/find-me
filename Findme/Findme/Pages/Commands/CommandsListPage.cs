@@ -182,7 +182,7 @@ namespace Findme
 					return parent.Width;
 				}),
 				Constraint.RelativeToParent( parent => {
-					return parent.Height;
+					return parent.Height - 45;
 				})
 			);
 

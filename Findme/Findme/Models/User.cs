@@ -8,6 +8,7 @@ namespace Findme
 		public String _id;
 		public String firstname;
 		public String lastname;
+		public String email;
 		public String photourl;
 		public String accessToken;
 		public String refreshToken;

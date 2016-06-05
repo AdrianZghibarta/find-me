@@ -40,6 +40,8 @@ namespace Findme.Droid
 //			if (!Resolver.IsSet)
 //				this.SetIoc ();
 
+			Xamarin.FormsMaps.Init (this, bundle);
+
 			LoadApplication (new App ());
 
 			MainActivity.sharedInstance = this;
@@ -121,9 +123,8 @@ namespace Findme.Droid
 
 		void RangingBeaconsInRegion(object sender, RangeEventArgs e)
 		{
+			List<FMBeacon> iBeaconsList = new List<FMBeacon> ();
 			if (e.Beacons.Count > 0) {
-
-				List<FMBeacon> iBeaconsList = new List<FMBeacon> ();
 
 				foreach (RadiusNetworks.IBeaconAndroid.IBeacon beacon in e.Beacons) {
 
@@ -154,10 +155,9 @@ namespace Findme.Droid
 					}
 
 					iBeaconsList.Add (fmBeacon);
-
-					ScannerManager.SharedInstance.SetNewAvailableListOfiBeacons (iBeaconsList);
 				}
 			}
+			ScannerManager.SharedInstance.SetNewAvailableListOfiBeacons (iBeaconsList);
 		}
 
 		#region IBeaconConsumer impl

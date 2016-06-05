@@ -73,7 +73,7 @@ namespace Findme
 
 		private void GetBeaconsAndRefreshList() {
 
-			BeaconsManager.SharedInstance.GetUserBeacons(BeaconsManager.AvailableBeaconType).ContinueWith ( task => {
+			BeaconsManager.SharedInstance.GetUserBeacons().ContinueWith ( task => {
 
 				FindMeResponse response = (FindMeResponse)task.Result;
 
@@ -138,7 +138,7 @@ namespace Findme
 					return parent.Width;
 				}),
 				Constraint.RelativeToParent( parent => {
-					return parent.Height;
+					return parent.Height - 45;
 				})
 			);
 

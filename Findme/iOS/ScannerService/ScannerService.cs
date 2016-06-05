@@ -81,10 +81,9 @@ namespace Findme.iOS
 
 			locationManager.DidRangeBeacons += (object sender, CLRegionBeaconsRangedEventArgs e) => {
 
+				List<FMBeacon> iBeaconsList = new List<FMBeacon>();
 				if (e.Beacons.Length > 0)
 				{
-					List<FMBeacon> iBeaconsList = new List<FMBeacon>();
-
 					foreach (CLBeacon iBeacon in e.Beacons)
 					{
 						FMBeacon fmBeacon = new FMBeacon();
@@ -118,9 +117,8 @@ namespace Findme.iOS
 
 						iBeaconsList.Add(fmBeacon);
 					}
-
-					ScannerManager.SharedInstance.SetNewAvailableListOfiBeacons (iBeaconsList);
 				}
+				ScannerManager.SharedInstance.SetNewAvailableListOfiBeacons (iBeaconsList);
 			};
 
 			locationManager.RegionEntered += (object sender, CLRegionEventArgs e) => {

@@ -44,7 +44,7 @@ namespace Findme
 				this.MinorMajor = "No beacon attached";
 			}
 
-			this.NeedToShowFoundRepports = (item.foundReports.Count > 0);
+			this.NeedToShowFoundRepports = (item.missingRepports.Count > 0);
 		}
 
 		public static List<ItemCellData> GetItemsCellDataList(List<Item> itemList) {

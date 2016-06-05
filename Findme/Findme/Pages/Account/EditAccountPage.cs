@@ -192,10 +192,16 @@ namespace Findme
 				HeightRequest = imageDim + 10
 			};
 
-			this.avatarImage = new ImageCircle () {
+			var placeholderImage = new ImageCircle () {
 				Source = new FileImageSource () {
 					File = "photoPlaceholder.png"
 				},
+				BorderColor = Color.White,
+				BorderWidth = 2,
+				Aspect = Aspect.AspectFill
+			};
+
+			this.avatarImage = new ImageCircle () {
 				BorderColor = Color.White,
 				BorderWidth = 2,
 				Aspect = Aspect.AspectFill
@@ -205,6 +211,16 @@ namespace Findme
 				BackgroundColor = Color.Transparent,
 				Text = ""
 			};
+
+			imageContainer.Children.Add (
+				placeholderImage,
+				Constraint.RelativeToParent( (parent) => {
+					return (parent.Width - imageDim) / 2;
+				}),
+				Constraint.Constant(0),
+				Constraint.Constant(imageDim),
+				Constraint.Constant(imageDim)
+			);
 
 			imageContainer.Children.Add (
 				avatarImage,
