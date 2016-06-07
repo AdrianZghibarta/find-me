@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
+using Plugin.Geolocator;
 
 namespace Findme
 {

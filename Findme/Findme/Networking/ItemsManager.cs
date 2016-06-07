@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using Plugin.Geolocator;
 
 namespace Findme
 {
 	public class ItemsManager: NetworkingManager
 	{
 		public static ItemsManager singletonInstance;
+		Plugin.Geolocator.Abstractions.IGeolocator locator = CrossGeolocator.Current;
 
 		/// <summary>
 		/// Gets the shared instance.
@@ -28,6 +30,7 @@ namespace Findme
 
 		public ItemsManager ()
 		{
+			this.locator.DesiredAccuracy = 100;
 		}
 
 		/// <summary>
@@ -304,35 +307,37 @@ namespace Findme
 		/// <param name="itemId">Item identifier.</param>
 		/// <param name="longitude">Longitude.</param>
 		/// <param name="latitude">Latitude.</param>
-		public async Task<FindMeResponse> CreateRepportForItemId(String itemId, float longitude, float latitude)
+		public async Task<FindMeResponse> CreateRepportForItemId(String itemId)
 		{
 			var findMeResponse = new FindMeResponse ();
+			var position = await this.locator.GetPositionAsync (timeoutMilliseconds: 15000);
 
-			try
-			{
-				var keyValues = new List<KeyValuePair<string, string>>();
-				keyValues.Add(new KeyValuePair<string, string>("token", UserStorage.GetAccessToken()));
-				keyValues.Add(new KeyValuePair<string, string>("itemId", itemId));
-				keyValues.Add(new KeyValuePair<string, string>("longitude", longitude));
-				keyValues.Add(new KeyValuePair<string, string>("latitude", latitude));
+			if (position != null) {
+				try {
+					var keyValues = new List<KeyValuePair<string, string>> ();
+					keyValues.Add (new KeyValuePair<string, string> ("token", UserStorage.GetAccessToken ()));
+					keyValues.Add (new KeyValuePair<string, string> ("itemId", itemId));
+					keyValues.Add (new KeyValuePair<string, string> ("longitude", position.Longitude.ToString()));
+					keyValues.Add (new KeyValuePair<string, string> ("latitude", position.Latitude.ToString()));
 
-				var parameters = new FormUrlEncodedContent(keyValues);
+					var parameters = new FormUrlEncodedContent (keyValues);
 
-				var result = await client.PostAsync(NetworkingUrls.ADD_REPPORT_URL, parameters);
-				findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage(result, "message");
+					var result = await client.PostAsync (NetworkingUrls.ADD_REPPORT_URL, parameters);
+					var stringResult = await result.Content.ReadAsStringAsync();
+					findMeResponse = await NetworkingManager.getFindMeResponseFromHttpResponseMessage (result, "message");
 
-				String message = (String)findMeResponse.Result;
-				if (null == message) {
-					findMeResponse.ErrorInfo = "No Object Found";
+					String message = (String)findMeResponse.Result;
+					if (null == message) {
+						findMeResponse.ErrorInfo = "No Object Found";
+					} else {
+						findMeResponse.Result = message;
+					}
+				} catch (Exception ex) {
+					ConsoleOutput.PrintLine ("Error message : " + ex.Message);
+					findMeResponse.ErrorInfo = ex.Message;
 				}
-				else {
-					findMeResponse.Result = message;
-				}
-			}
-			catch (Exception ex)
-			{
-				ConsoleOutput.PrintLine ("Error message : " + ex.Message);
-				findMeResponse.ErrorInfo = ex.Message;
+			} else {
+				findMeResponse.ErrorInfo = "Can not get your location";
 			}
 
 			return findMeResponse;

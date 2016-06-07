@@ -25,6 +25,7 @@ namespace Findme
 		private List<FMBeacon> bufferBeacons = new List<FMBeacon>();
 		private List<Item> foundedItems = new List<Item>();
 		private List<ScannCellData> scannCellDataList = new List<ScannCellData>();
+		private List<String> repportedItems = new List<String>();
 
 		#endregion
 
@@ -123,6 +124,22 @@ namespace Findme
 					var matchBeacon = filteredItems.First();
 					ScannCellData scannCellData = new ScannCellData (item, matchBeacon.proximity);
 					this.scannCellDataList.Add (scannCellData);
+					if (this.repportedItems.Where (x => x == item._id).ToList ().Count == 0) {
+						this.repportedItems.Add(item._id);
+						ItemsManager.SharedInstance.CreateRepportForItemId (item._id).ContinueWith ( task => {
+
+							FindMeResponse response = (FindMeResponse)task.Result;
+
+							if (null != response.ErrorInfo) {
+								Device.BeginInvokeOnMainThread( () => {
+									this.DisplayAlert("Error", response.ErrorInfo, "Ok");
+								});
+								this.repportedItems.Remove(item._id);
+							}
+							else {
+							}
+						});
+					}
 				}
 			}
 
